@@ -82,7 +82,7 @@ function loadDashboard()
 		//row.title = thisObj.title;
 		tableData.push(row);
 	}
-	
+	//alert(Ti.App.getArguments());
 }
 
 loadDashboard();
