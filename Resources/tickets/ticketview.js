@@ -6,8 +6,8 @@ var win = Titanium.UI.currentWindow;
 var tid = win.tid;
 
 var buttonObjects = [
-	{image:'../images/navbtns/ver_top_normal.png', width:35, height:25},
-	{image:'../images/navbtns/ver_bottom_normal.png', width:35, height:25}
+	{systemButton:103/*image:'../images/navbtns/ver_top_normal.png', width:35, height:25*/},
+	{systemButton:104/*image:'../images/navbtns/ver_bottom_normal.png', width:35, height:25*/}
 ];
 
 var nav_bar = Titanium.UI.createButtonBar({

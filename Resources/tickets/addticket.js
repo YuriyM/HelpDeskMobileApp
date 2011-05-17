@@ -105,17 +105,27 @@ tableview.addEventListener('click', function(e)
 {
 	if (e.rowData.test)
 	{
+		
 		var win = Titanium.UI.createWindow({
 			url:e.rowData.test,
-			title:e.rowData.title
+			title:e.rowData.title,
+						
+			_parent: Titanium.UI.currentWindow,
+		    navGroup : Titanium.UI.currentWindow.navGroup,
+		    rootWindow : Titanium.UI.currentWindow.rootWindow		
 		});
-		Titanium.UI.currentTab.open(win,{animated:true});
+		Titanium.UI.currentWindow.navGroup.open(win,{animated:true});
+		//Titanium.UI.currentTab.open(win,{animated:true});
 	}
 });
 
 // add table view to the window
 win.add(tableview);
 var bNavAdd = Titanium.UI.createButton({ title: 'Create' });
+bNavAdd.addEventListener('click', function(e)
+{
+	
+});
 win.setRightNavButton(bNavAdd);
 
 

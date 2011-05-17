@@ -1,29 +1,5 @@
 var win = Ti.UI.currentWindow;
 
-var search = Titanium.UI.createSearchBar({
-	//barColor:'#000',
-	showCancel:true,
-	/*height:43,
-	top:0,*/
-	hintText:'Search User'
-});
-
-search.addEventListener('change', function(e)
-{
-Titanium.API.info('search bar: you type ' + e.value + ' act val ' + search.value);
-});
-search.addEventListener('return', function(e)
-{
-search.blur();
-});
-search.addEventListener('cancel', function(e)
-{
-search.blur();
-});
-
-win.add(search);
-
-
 var data = [];
 
 for (var i=0;i<=4;i++)
@@ -47,23 +23,20 @@ for (var i=0;i<=4;i++)
 	{
 		row.hasCheck=true;
 	}
-	/*var l = Ti.UI.createLabel({
+	var l = Ti.UI.createLabel({
 		left:5,
 		font:{fontSize:20, fontWeight:'bold'},
 		color:'#000',
 		text:rowTitle
 	});
-	row.add(l);*/
-	row.title = rowTitle;
+	row.add(l);
 	data[i] = row;
 }
 
 // create table view
 var tableview = Titanium.UI.createTableView({
-	search:search,
-	searchHidden:false,
-	data:data//,
-	//style: Titanium.UI.iPhone.TableViewStyle.GROUPED
+	data:data,
+	style: Titanium.UI.iPhone.TableViewStyle.GROUPED
 });
 
 // create table view event listener
