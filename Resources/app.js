@@ -1,3 +1,12 @@
+/*Titanium.App.addEventListener('resume', function(e)
+    {
+     // do something
+    });
+Titanium.addEventListener(Titanium.FOCUSED, function(event) { 
+      Titanium.currentlyFocusedWindow = event.target; /// from an old post
+ 
+  });
+*/
 var appBase = Ti.UI.createWindow({ backgroundColor:'#ffffff', });
 var navGroup = Ti.UI.iPhone.createNavigationGroup({	 });	
 var winHome = Ti.UI.createWindow({

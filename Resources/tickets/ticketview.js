@@ -42,7 +42,7 @@ function loadticket(id)
     };    
     
     loadIndicator.show();
-    mbl_dataExchange("GET", "43BAA28E-177C-4BA7-84A0-6C1CFD521DEF/Ticket.svc/"+id + "/",
+    mbl_dataExchange("GET", "4BFEF6D5-D4C6-446F-AAD4-407BFDE6614F/43BAA28E-177C-4BA7-84A0-6C1CFD521DEF/Tickets.svc/"+id + "/",
     	onload,
     	function (e) { loadIndicator.loadingdatastrem(e.progress); },
     	function (e) { loadIndicator.hide(); 

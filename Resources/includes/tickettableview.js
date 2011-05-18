@@ -2,16 +2,16 @@ function createTicketTableView(tickets)
 {
 	var rowData = [];
 	for (var i = 0; i < tickets.length; i++) {
-			var number = tickets[i].TicketNumber;
-            var subject = tickets[i].Subject;
-            var user = tickets[i].UserName;
-            var tech = tickets[i].TechnicianName;
-            var account = tickets[i].AccountName;
-            var tclass = tickets[i].Class;
-            var priority = tickets[i].PriorityLevel;
-            var project = tickets[i].Project;
-            var status = tickets[i].Status;
-            var level = tickets[i].TicketLevelID;
+			var number = tickets[i].number;
+            var subject = tickets[i].subject;
+            var user = tickets[i].user_name;
+            var tech = tickets[i].tech_name;
+            var account = tickets[i].account_name;
+            var tclass = tickets[i].class_name;
+            var priority = tickets[i].priority_level;
+            var project = tickets[i].project;
+            var status = tickets[i].status;
+            var level = tickets[i].level;
             var ticket_time = 'Yesterday'; // TODO tickets[i].TicketTime
             
             //Ti.API.info(user);
@@ -359,16 +359,16 @@ function createTicketTableView(tickets)
 
 function createTicketView(viewTicket, ticket)
 {
-    var number = ticket.TicketNumber;
-    var subject = ticket.Subject;
-    var user = ticket.UserName;
-    var tech = ticket.TechnicianName;
-    var account = ticket.AccountName;
-    var tclass = ticket.Class;
-    var priority = ticket.PriorityLevel;
-    var project = ticket.Project;
-    var status = ticket.Status;
-    var level = ticket.TicketLevel;
+    var number = ticket.ticket;
+    var subject = ticket.subject;
+    var user = ticket.user_name;
+    var tech = ticket.tech_name;
+    var account = ticket.account_name;
+    var tclass = ticket.class_name;
+    var priority = ticket.priority_level;
+    var project = ticket.project;
+    var status = ticket.status;
+    var level = ticket.ticket_level;
     
     var data = [];
 	var testHTML = '<html><body><table cellpadding=4 cellspacing=0><tbody><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Ticket #</td><td style="border-bottom:solid 1px #555555;text-align:left"><b><a href="http://login.bigwebapps.com/?TicketId=4410191&amp;login=yuriy.mykytyuk@micajah.com&amp;DeptId=7&amp;DeptName=bigWebApps+Support" target="_blank">11620</a> </b></td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Subject</td><td style="border-bottom:solid 1px #555555;text-align:left">Mobile UI Adjustmetns </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Department</td><td style="border-bottom:solid 1px #555555;text-align:left">bigWebApps Support </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Account/Location</td><td style="border-bottom:solid 1px #555555;text-align:left">bigWebApps Support (Internal) / Atlanta </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Technician</td><td style="border-bottom:solid 1px #555555;text-align:left">Yuriy Mykytyuk </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">User</td><td style="border-bottom:solid 1px #555555;text-align:left">Jon Vickers<br><a href="mailto:jon.vickers@micajah.com">jon.vickers@micajah.com</a></td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Level</td><td style="border-bottom:solid 1px #555555;text-align:left">3 - Active Plate </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Priority</td><td style="border-bottom:solid 1px #555555;text-align:left">4 - Upgrade/New Feature </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Expect Response By</td><td style="border-bottom:solid 1px #555555;text-align:left">5/5/2011 17:34 </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Class</td><td style="border-bottom:solid 1px #555555;text-align:left">HelpDesk </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Project</td><td style="border-bottom:solid 1px #555555;text-align:left">HelpDesk </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Logged Time</td><td style="border-bottom:solid 1px #555555;text-align:left">0 hours </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Remaining Time</td><td style="border-bottom:solid 1px #555555;text-align:left">0 hours </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Total Time</td><td style="border-bottom:solid 1px #555555;text-align:left">No budget </td></tr></tbody></table>' +
