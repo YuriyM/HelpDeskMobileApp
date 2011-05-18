@@ -1,3 +1,17 @@
+Ti.App.addEventListener( 'resume', function(e) {
+    Ti.API.info('Resume: ' + Ti.App.getArguments());
+    Ti.API.info(JSON.stringify(Ti.App.getArguments()));
+
+});
+
+Ti.App.addEventListener('resumed',function() {
+    Ti.API.info('Resumed: ' + Ti.App.getArguments());
+    Ti.API.info(JSON.stringify(Ti.App.getArguments()));
+});
+
+Titanium.App.addEventListener('pause',function(e){
+	Ti.API.info('Pause');
+});
 /*Titanium.App.addEventListener('resume', function(e)
     {
      // do something
