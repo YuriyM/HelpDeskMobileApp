@@ -5,15 +5,21 @@ Ti.include('../controls/load_indicator_iphone.js');
 var win = Titanium.UI.currentWindow;
 var tid = win.tid;
 
+var previousTicket = Titanium.UI.createButton({
+	systemButton:103
+});
+
+var nextTicket = Titanium.UI.createButton({
+	systemButton:104
+});
+
 var buttonObjects = [
-	{systemButton:103/*image:'../images/navbtns/ver_top_normal.png', width:35, height:25*/},
-	{systemButton:104/*image:'../images/navbtns/ver_bottom_normal.png', width:35, height:25*/}
+	{image:'../images/navbtns/ver_top_normal.png', width:35, height:27},
+	{image:'../images/navbtns/ver_bottom_normal.png', width:35, height:27}
 ];
 
 var nav_bar = Titanium.UI.createButtonBar({
-	labels:buttonObjects,
-	style: Titanium.UI.iPhone.SystemButtonStyle.BAR,
-	backgroundColor:'#336699'
+	labels:buttonObjects
 });
 
 win.setRightNavButton(nav_bar);
