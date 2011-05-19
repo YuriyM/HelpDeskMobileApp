@@ -85,6 +85,31 @@ dialog.addEventListener('click',function(e)
 	}
 });
 
+// Option Dialog
+var optionsTransferDialogOpts = {
+	options:['Change Level', 'Transfer to Technician', 'Transfer to Class', 'Cancel'],
+	//destructive:0,
+	cancel:3//,
+	//title:'Are you sure?'
+};
+
+var dialogTransfer = Titanium.UI.createOptionDialog(optionsTransferDialogOpts);
+
+dialogTransfer.addEventListener('click',function(e)
+{
+	if (e.index == 0)
+	{
+		/*mbl_dataExchange("DELETE", "4BFEF6D5-D4C6-446F-AAD4-407BFDE6614F/43BAA28E-177C-4BA7-84A0-6C1CFD521DEF/Tickets.svc/" + tid + "/",
+    	function () {
+        	Ti.API.info(this.responseText);
+        	win.navGroup.close(win);
+			win._parent.fireEvent("event_ticket_closed", { id : tid });
+    	},
+    	function (e) {  },
+    	function (e) { alert(e); });*/
+	}
+});
+
 // Toolbar section
 var flexSpace = Titanium.UI.createButton({
 	systemButton:Titanium.UI.iPhone.SystemButton.FLEXIBLE_SPACE
@@ -126,6 +151,11 @@ var close = Titanium.UI.createButton({
 close.addEventListener('click', function()
 {
 	dialog.show();
+});
+
+transfer.addEventListener('click', function()
+{
+	dialogTransfer.show();
 });
 
 win.toolbar = [refresh,flexSpace,transfer,flexSpace,close,flexSpace,respond,flexSpace,add];
