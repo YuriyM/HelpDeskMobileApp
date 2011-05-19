@@ -32,7 +32,7 @@ nav_bar.addEventListener('click', function(e)
 var viewTicket = Titanium.UI.createTableView({ id: 'tvTickets', data: []/*, separatorStyle: Titanium.UI.iPhone.TableViewSeparatorStyle.NONE*/ });
 
 // Load Ticket info
-function loadticket(id)
+function loadticket(ticket_id)
 {   
 	function renderData(data)
 	{
@@ -48,7 +48,7 @@ function loadticket(id)
     };    
     
     loadIndicator.show();
-    mbl_dataExchange("GET", "4BFEF6D5-D4C6-446F-AAD4-407BFDE6614F/43BAA28E-177C-4BA7-84A0-6C1CFD521DEF/Tickets.svc/"+id + "/",
+    mbl_dataExchange("GET", "4BFEF6D5-D4C6-446F-AAD4-407BFDE6614F/43BAA28E-177C-4BA7-84A0-6C1CFD521DEF/Tickets.svc/" + ticket_id + "/",
     	onload,
     	function (e) { loadIndicator.loadingdatastrem(e.progress); },
     	function (e) { loadIndicator.hide(); 
@@ -72,7 +72,17 @@ var dialog = Titanium.UI.createOptionDialog(optionsDialogOpts);
 
 dialog.addEventListener('click',function(e)
 {
-	//e.index;
+	if (e.index == 0)
+	{
+		mbl_dataExchange("DELETE", "4BFEF6D5-D4C6-446F-AAD4-407BFDE6614F/43BAA28E-177C-4BA7-84A0-6C1CFD521DEF/Tickets.svc/" + tid + "/",
+    	function () {
+        	Ti.API.info(this.responseText);
+        	win.navGroup.close(win);
+			win._parent.fireEvent("event_ticket_closed", { id : tid });
+    	},
+    	function (e) {  },
+    	function (e) { alert(e); });
+	}
 });
 
 // Toolbar section
@@ -96,6 +106,19 @@ var respond = Titanium.UI.createButton({
 	systemButton:Titanium.UI.iPhone.SystemButton.REPLY
 });
 
+respond.addEventListener('click', function()
+{
+		var win = Titanium.UI.createWindow({
+			url:"ticketrespond.js",
+			title:"Write Ticket Response",
+			tid: tid,
+			_parent: Titanium.UI.currentWindow,
+		    navGroup : Titanium.UI.currentWindow.navGroup,
+		    rootWindow : Titanium.UI.currentWindow.rootWindow		
+		});
+		Titanium.UI.currentWindow.navGroup.open(win);
+});
+
 var close = Titanium.UI.createButton({
 	systemButton:Titanium.UI.iPhone.SystemButton.STOP
 });
@@ -109,32 +132,9 @@ win.toolbar = [refresh,flexSpace,transfer,flexSpace,close,flexSpace,respond,flex
 
 win.add(loadIndicator);
 
-loadticket(tid);
-
-/*var textRespond = Titanium.UI.createTextArea({
-	color:'#336699',
-	borderRadius: 5,
-	borderWidth: 1,
-	borderColor:'#bbb',
-	height:200,
-	top:10,
-	width: 280,
-	font:{fontSize:18,fontFamily:'Arial', fontWeight:'nornal'},
-	suppressReturn:true,
-	hintText:'Enter Response to Ticket'
+win.addEventListener('event_ticket_respond',function(e)
+{
+	// refresh ticket info - after ticket respond
 });
 
-var bSend = Titanium.UI.createButton({
-	title:'Send Response',
-	height:40,
-	width: 280,
-	top:220,
-	style:Titanium.UI.iPhone.SystemButtonStyle.PLAIN, 
-	borderRadius:10, 
-	//font:{fontSize:16,fontWeight:'bold'},  // add background image
-	backgroundGradient:
-	{type:'linear', colors:['#8097c8','#3665bf'], startPoint:{x:0,y:0}, endPoint:{x:0,y:40}, backFillStart:false},
-	borderWidth:1,
-	borderColor:'#666',
-	color: '#fff'
-});*/
+loadticket(tid);
