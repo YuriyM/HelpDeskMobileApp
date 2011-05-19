@@ -1,7 +1,10 @@
+Ti.include('../includes/webserviceclient.js');
+
 var win = Titanium.UI.currentWindow;
 win.tkt_uid = 0;
 win.tkt_cid = 0;
 win.tkt_tid = 0;
+win.tkt_sbj = false;
 
 if (Ti.Platform.name == 'android') 
 {
@@ -147,15 +150,65 @@ tableview.addEventListener('click', function(e)
 		//Titanium.UI.currentTab.open(win,{animated:true});
 	}
 });
-
 // add table view to the window
 win.add(tableview);
 var bNavAdd = Titanium.UI.createButton({ title: 'Create' });
 bNavAdd.addEventListener('click', function(e)
 {
-	//../tickets/
+	if (win.tkt_uid <= 0)
+	{
+		alert('Please, select user');
+		return;
+	}
+	
+	if (win.tkt_cid <= 0)
+	{
+		alert('Please, select class');
+		return;
+	}
+	
+	if (win.tkt_tid <= 0)
+	{
+		alert('Please, select tech');
+		return;
+	}
+	
+	if (!textSubject.hasText())
+	{
+		alert('Please, enter ticket subject');
+		return;
+	}
+	
+	var request = 
+	{
+		user_id: win.tkt_uid,
+		class_id: win.tkt_cid,
+		tech_id: win.tkt_tid,
+		subject: textSubject.value,
+		details: textDetails.value
+	};
+    
+    Ti.API.info('Before ' + JSON.stringify(request));
+    mbl_dataExchange("POST", "4BFEF6D5-D4C6-446F-AAD4-407BFDE6614F/43BAA28E-177C-4BA7-84A0-6C1CFD521DEF/Tickets.svc",
+    	function () {
+        	Ti.API.info(this.responseText);
+        	win.navGroup.close(win);
+			win._parent.fireEvent("event_ticket_created", { id : 0 });
+    	},
+    	function (e) {  },
+    	function (e) { alert(e); },
+    	JSON.stringify(request));
 });
 win.setRightNavButton(bNavAdd);
+
+//win.rightNavButton.enabled = false;
+
+function changeRightNavBtnStatus()
+{
+	//win.rightNavButton.enabled = true;// 
+	//var b = (win.tkt_uid > 0 && win.tkt_cid > 0 && win.tkt_tid > 0 && win.tkt_sbj);
+	//alert(b);
+}
 
 win.addEventListener('event_select_entity',function(e)
 {
@@ -192,4 +245,11 @@ win.addEventListener('event_select_entity',function(e)
 	}
 	tableview.updateRow(e.select_type,rowUpdate,{animationStyle:Titanium.UI.iPhone.RowAnimationStyle.LEFT});
     Titanium.API.info("foo event received = "+JSON.stringify(e));
+    changeRightNavBtnStatus();
 });
+
+/*textSubject.addEventListener('blur', function(e)
+{
+	win.tkt_sbj = textSubject.hasText();
+	changeRightNavBtnStatus();
+});*/
