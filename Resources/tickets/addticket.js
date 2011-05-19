@@ -1,4 +1,7 @@
 var win = Titanium.UI.currentWindow;
+win.tkt_uid = 0;
+win.tkt_cid = 0;
+win.tkt_tid = 0;
 
 if (Ti.Platform.name == 'android') 
 {
@@ -9,35 +12,34 @@ else
 	//win.backgroundColor = '#aebcad';
 }
 
+win.backButtonTitle = 'Back';
+
 var data = [];
 
 // User row
 var rowUser = Ti.UI.createTableViewRow({
-	title:'Yuriy Dzoba',
-	entityId: -1,
+	title: '',
 	hasChild:true,
-	test:'selectuser.js',
-	header:'User'	
+	winurl:'winselect.js',
+	header:'User*'	
 });
 data[0] = rowUser;
 
 // Class row
 var rowClass = Ti.UI.createTableViewRow({
-	title:'',	
-	entityId: 0,
+	title:'',
 	hasChild:true,
-	test:'selectclass.js',
+	winurl:'winselect.js',
 	header:'Class*'	
 });
 data[1] = rowClass;
 
 // Tech row
 var rowTech = Ti.UI.createTableViewRow({
-	title:'Yuriy Mykytyuk',	
-	entityId: -1,
+	title:'',	
 	hasChild:true,
-	test:'selecttech.js',
-	header:'Technician'	
+	winurl:'winselect.js',
+	header:'Technician*'	
 });
 data[2] = rowTech;
 
@@ -100,21 +102,48 @@ var tableViewOptions = {
 
 var tableview = Titanium.UI.createTableView(tableViewOptions);
 
+var winSelect = [null, null, null];
+
+var hdMobile = {};
+
+hdMobile.createSelectWindow = function(e) {
+    var winUni = Titanium.UI.createWindow({
+				url:e.rowData.winurl,	
+				window_type: e.index,						
+				_parent: Titanium.UI.currentWindow,
+			    navGroup : Titanium.UI.currentWindow.navGroup,
+			    rootWindow : Titanium.UI.currentWindow.rootWindow		
+			});
+    
+    return winUni;
+};
+
 // create table view event listener
 tableview.addEventListener('click', function(e)
 {
-	if (e.rowData.test)
+	if (e.rowData.winurl)
 	{
-		
-		var win = Titanium.UI.createWindow({
-			url:e.rowData.test,
-			title:e.rowData.title,
-						
-			_parent: Titanium.UI.currentWindow,
-		    navGroup : Titanium.UI.currentWindow.navGroup,
-		    rootWindow : Titanium.UI.currentWindow.rootWindow		
-		});
-		Titanium.UI.currentWindow.navGroup.open(win,{animated:true});
+		if (winSelect[e.index] == null)
+		{
+			winUni = hdMobile.createSelectWindow(e);
+			winSelect[e.index] = winUni;
+		}		
+		switch (e.index)
+		{
+			case 0:
+				winSelect[e.index].select_id = win.tkt_uid;
+				winSelect[e.index].title = 'Select User';
+			break;
+			case 1:
+				winSelect[e.index].select_id = win.tkt_cid;
+				winSelect[e.index].title = 'Select Class';
+			break;
+			case 2:
+				winSelect[e.index].select_id = win.tkt_tid;
+				winSelect[e.index].title = 'Select Tech';
+			break;
+		}
+		Titanium.UI.currentWindow.navGroup.open(winSelect[e.index],{animated:true});
 		//Titanium.UI.currentTab.open(win,{animated:true});
 	}
 });
@@ -124,8 +153,43 @@ win.add(tableview);
 var bNavAdd = Titanium.UI.createButton({ title: 'Create' });
 bNavAdd.addEventListener('click', function(e)
 {
-	
+	//../tickets/
 });
 win.setRightNavButton(bNavAdd);
 
-
+win.addEventListener('event_select_entity',function(e)
+{
+	var rowUpdate = null;
+	switch (e.select_type)
+	{
+		case 0:
+			rowUpdate = Ti.UI.createTableViewRow({
+				title: e.name,
+				hasChild:true,
+				winurl:'winselect.js',
+				header:'User*'
+			});
+			win.tkt_uid = e.id;
+		break;
+		case 1:
+			rowUpdate = Ti.UI.createTableViewRow({
+				title: e.name,
+				hasChild:true,
+				winurl:'winselect.js',
+				header:'Class*'
+			});
+			win.tkt_cid = e.id;
+		break;
+		case 2:
+			rowUpdate = Ti.UI.createTableViewRow({
+				title: e.name,
+				hasChild:true,
+				winurl:'winselect.js',
+				header:'Technician*'	
+			});
+			win.tkt_tid = e.id;
+		break;
+	}
+	tableview.updateRow(e.select_type,rowUpdate,{animationStyle:Titanium.UI.iPhone.RowAnimationStyle.LEFT});
+    Titanium.API.info("foo event received = "+JSON.stringify(e));
+});

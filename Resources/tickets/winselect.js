@@ -5,9 +5,19 @@ Ti.include('../controls/load_indicator_iphone.js');
 
 var win = Ti.UI.currentWindow;
 
-var tvTechs = Titanium.UI.createTableView({ style: Titanium.UI.iPhone.TableViewStyle.GROUPED });
+var search = Titanium.UI.createSearchBar({
+	showCancel:true,
+	hintText:'Search User'
+});
 
-tvTechs.addEventListener('click', function(e)
+var tvUsers = Titanium.UI.createTableView({  });
+
+if (win.window_type == 0)
+	tvUsers.search = search;
+else if (win.window_type == 2)
+	tvUsers.style = Titanium.UI.iPhone.TableViewStyle.GROUPED;
+
+tvUsers.addEventListener('click', function(e)
 {
 	var index = e.index;
 	var section = e.section;
@@ -23,15 +33,15 @@ tvTechs.addEventListener('click', function(e)
 	{
 		win.navGroup.close(win);
 		win._parent.fireEvent("event_select_entity", {
-			select_type: 2,
+			select_type: win.window_type,
 			name: section.rows[index].title,
 			id : section.rows[index].key
 		}); // another way - use Ti.App.fireEvent - global event
 	}, 500);
 });
-win.add(tvTechs);
+win.add(tvUsers);
 		
-function loadTechs() {
+function loadUsers() {
 	
 	function createGlobalTableView(data)
     {	
@@ -44,7 +54,7 @@ function loadTechs() {
 		{
 			var row = Ti.UI.createTableViewRow();
 			var rowTitle = users[i].first_name + ' ' + users[i].last_name;//email
-			if (win.select_tech_id == users[i].key)
+			if (win.select_id == users[i].key)
 			{
 				row.hasCheck=true;
 			}
@@ -53,16 +63,22 @@ function loadTechs() {
 			row.className = "itemUser";
 			data[i] = row;
 		}
-        tvTechs.data = data;
-        tvTechs.show();
+        tvUsers.data = data;
+        tvUsers.show();
     }    
 	
     function onload() {
         createGlobalTableView(this.responseText);
     };
     
-    tvTechs.hide();
+    tvUsers.hide();
     loadIndicator.show();
+    
+    if (win.window_type == 1)
+    {
+    	createGlobalTableView('{"PageNumber":1,"PageSize":25,"Users":[{"first_name":"Class", "key":"1","last_name":"1"}, {"first_name":"Class", "key":"2","last_name":"2"}, {"first_name":"Class", "key":"3","last_name":"3"}]}');
+    }
+    else
     mbl_dataExchange("GET", "4BFEF6D5-D4C6-446F-AAD4-407BFDE6614F/43BAA28E-177C-4BA7-84A0-6C1CFD521DEF/Users.svc",
     	onload,
     	function (e) { loadIndicator.loadingdatastrem(e.progress); },
@@ -72,4 +88,4 @@ function loadTechs() {
 			createGlobalTableView(data);});
 }
 
-loadTechs();
+loadUsers();
