@@ -1,4 +1,4 @@
-function createTicketTableView(tickets)
+function createTicketTableView(tickets, tickets_id)
 {
 	var rowData = [];
 	for (var i = 0; i < tickets.length; i++) {
@@ -351,6 +351,7 @@ function createTicketTableView(tickets)
 			row.add(imvAttach);
             row.className = "itemTicket";
 			row.tid = tickets[i].key;
+			tickets_id[i] = tickets[i].key;
 			row.number = number;
             rowData[i] = row;
         }

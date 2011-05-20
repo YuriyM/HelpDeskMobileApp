@@ -65,21 +65,50 @@ function loadUsers() {
 		}
         tvUsers.data = data;
         tvUsers.show();
+    }
+    
+    function createGlobalTableViewClass(data)
+    {	
+    	loadIndicator.hide();
+    	Ti.API.info(data);
+    	var info = eval('(' + data + ')');
+        var classes = info.Classes;
+        var data = [];
+		for (var i=0; i < classes.length; i++)
+		{
+			var row = Ti.UI.createTableViewRow();
+			var rowTitle = classes[i].name;
+			if (win.select_id == classes[i].key)
+			{
+				row.hasCheck=true;
+			}
+			row.key = classes[i].key;
+			row.title = rowTitle;
+			row.className = "itemClass";
+			data[i] = row;
+		}
+        tvUsers.data = data;
+        tvUsers.show();
     }    
 	
     function onload() {
-        createGlobalTableView(this.responseText);
+    	if (win.window_type == 1)
+    		createGlobalTableViewClass(this.responseText);
+    	else
+        	createGlobalTableView(this.responseText);
     };
     
     tvUsers.hide();
     loadIndicator.show();
     
+    var requestPoint = 'Users.svc';
     if (win.window_type == 1)
     {
-    	createGlobalTableView('{"PageNumber":1,"PageSize":25,"Users":[{"first_name":"Class", "key":"1","last_name":"1"}, {"first_name":"Class", "key":"2","last_name":"2"}, {"first_name":"Class", "key":"3","last_name":"3"}]}');
+    	requestPoint = 'Classes.svc';
+    	//createGlobalTableView('{"PageNumber":1,"PageSize":25,"Users":[{"first_name":"Class", "key":"1","last_name":"1"}, {"first_name":"Class", "key":"2","last_name":"2"}, {"first_name":"Class", "key":"3","last_name":"3"}]}');
     }
-    else
-    mbl_dataExchange("GET", "4BFEF6D5-D4C6-446F-AAD4-407BFDE6614F/43BAA28E-177C-4BA7-84A0-6C1CFD521DEF/Users.svc",
+    
+    mbl_dataExchange("GET", "4BFEF6D5-D4C6-446F-AAD4-407BFDE6614F/43BAA28E-177C-4BA7-84A0-6C1CFD521DEF/" + requestPoint,
     	onload,
     	function (e) { loadIndicator.loadingdatastrem(e.progress); },
     	function (e) { loadIndicator.hide();

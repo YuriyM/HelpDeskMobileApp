@@ -1,10 +1,10 @@
 Ti.include('../includes/webserviceclient.js');
 
 var win = Titanium.UI.currentWindow;
-win.tkt_uid = 0;
-win.tkt_cid = 0;
-win.tkt_tid = 0;
-win.tkt_sbj = false;
+tkt_uid = 0;
+tkt_cid = 0;
+tkt_tid = 0;
+tkt_sbj = false;
 
 if (Ti.Platform.name == 'android') 
 {
@@ -134,15 +134,15 @@ tableview.addEventListener('click', function(e)
 		switch (e.index)
 		{
 			case 0:
-				winSelect[e.index].select_id = win.tkt_uid;
+				winSelect[e.index].select_id = tkt_uid;
 				winSelect[e.index].title = 'Select User';
 			break;
 			case 1:
-				winSelect[e.index].select_id = win.tkt_cid;
+				winSelect[e.index].select_id = tkt_cid;
 				winSelect[e.index].title = 'Select Class';
 			break;
 			case 2:
-				winSelect[e.index].select_id = win.tkt_tid;
+				winSelect[e.index].select_id = tkt_tid;
 				winSelect[e.index].title = 'Select Tech';
 			break;
 		}
@@ -155,40 +155,42 @@ win.add(tableview);
 var bNavAdd = Titanium.UI.createButton({ title: 'Create' });
 bNavAdd.addEventListener('click', function(e)
 {
-	if (win.tkt_uid <= 0)
+	if (tkt_uid <= 0)
 	{
 		alert('Please, select user');
 		return;
 	}
 	
-	if (win.tkt_cid <= 0)
+	if (tkt_cid <= 0)
 	{
 		alert('Please, select class');
 		return;
 	}
 	
-	if (win.tkt_tid <= 0)
+	if (tkt_tid <= 0)
 	{
 		alert('Please, select tech');
 		return;
 	}
 	
-	if (!textSubject.hasText())
+	if (textSubject.value == '')
 	{
 		alert('Please, enter ticket subject');
 		return;
 	}
 	
-	var request = 
+	var requestData = 
 	{
-		user_id: win.tkt_uid,
-		class_id: win.tkt_cid,
-		tech_id: win.tkt_tid,
+		user_id: tkt_uid,
+		class_id: tkt_cid,
+		tech_id: tkt_tid,
 		subject: textSubject.value,
 		details: textDetails.value
 	};
+	
+    var jsonRequestData = JSON.stringify(requestData)
     
-    Ti.API.info('Before ' + JSON.stringify(request));
+    Ti.API.info('Before ' + jsonRequestData);
     mbl_dataExchange("POST", "4BFEF6D5-D4C6-446F-AAD4-407BFDE6614F/43BAA28E-177C-4BA7-84A0-6C1CFD521DEF/Tickets.svc",
     	function () {
         	Ti.API.info(this.responseText);
@@ -197,7 +199,7 @@ bNavAdd.addEventListener('click', function(e)
     	},
     	function (e) {  },
     	function (e) { alert(e); },
-    	JSON.stringify(request));
+    	jsonRequestData);
 });
 win.setRightNavButton(bNavAdd);
 
@@ -222,7 +224,7 @@ win.addEventListener('event_select_entity',function(e)
 				winurl:'winselect.js',
 				header:'User*'
 			});
-			win.tkt_uid = e.id;
+			tkt_uid = e.id;
 		break;
 		case 1:
 			rowUpdate = Ti.UI.createTableViewRow({
@@ -231,7 +233,7 @@ win.addEventListener('event_select_entity',function(e)
 				winurl:'winselect.js',
 				header:'Class*'
 			});
-			win.tkt_cid = e.id;
+			tkt_cid = e.id;
 		break;
 		case 2:
 			rowUpdate = Ti.UI.createTableViewRow({
@@ -240,7 +242,7 @@ win.addEventListener('event_select_entity',function(e)
 				winurl:'winselect.js',
 				header:'Technician*'	
 			});
-			win.tkt_tid = e.id;
+			tkt_tid = e.id;
 		break;
 	}
 	tableview.updateRow(e.select_type,rowUpdate,{animationStyle:Titanium.UI.iPhone.RowAnimationStyle.LEFT});
