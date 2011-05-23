@@ -6,6 +6,10 @@ var win = Titanium.UI.currentWindow;
 var tid = win.tid;
 var tickets = win.tickets;
 
+tkt_lid = 0;
+tkt_techid = 0;
+tkt_cid = 0;
+
 var previousTicket = Titanium.UI.createButton({
 	systemButton:103
 });
@@ -131,19 +135,81 @@ var optionsTransferDialogOpts = {
 
 var dialogTransfer = Titanium.UI.createOptionDialog(optionsTransferDialogOpts);
 
+var winSelect = [null, null, null];
+
+// create table view event listener
 dialogTransfer.addEventListener('click',function(e)
 {
-	if (e.index == 0)
-	{
-		/*mbl_dataExchange("DELETE", "4BFEF6D5-D4C6-446F-AAD4-407BFDE6614F/43BAA28E-177C-4BA7-84A0-6C1CFD521DEF/Tickets.svc/" + tid + "/",
+		if (winSelect[e.index] == null)
+		{
+			var win_type = 3 - e.index;
+			var winUni = Titanium.UI.createWindow({
+				url:'winselect.js',	
+				window_type: win_type,
+				title: 'Details',						
+				_parent: Titanium.UI.currentWindow,
+			    navGroup : Titanium.UI.currentWindow.navGroup,
+			    rootWindow : Titanium.UI.currentWindow.rootWindow		
+			});
+			winSelect[e.index] = winUni;
+		}		
+		switch (e.index)
+		{
+			case 0:
+				winSelect[e.index].select_id = tkt_lid;
+				winSelect[e.index].title = 'Select Level';
+			break;
+			case 1:
+				winSelect[e.index].select_id = tkt_techid;
+				winSelect[e.index].title = 'Select Tech';
+			break;
+			case 2:
+				winSelect[e.index].select_id = tkt_cid;
+				winSelect[e.index].title = 'Select Class';
+			break;
+		}
+		Titanium.UI.currentWindow.navGroup.open(winSelect[e.index],{animated:true});
+});
+
+win.addEventListener('event_select_entity',function(e)
+{
+	Titanium.API.info("callback event received = "+JSON.stringify(e));
+	//e.id
+	switch (e.select_type)
+		{
+			case 0:
+				var requestData = 
+				{
+					ticket_id: tid,
+					level_id: e.id
+				}
+			break;
+			case 1:
+				var requestData = 
+				{
+					ticket_id: tid,
+					tech_id: e.id
+				}
+			break;
+			case 2:
+				var requestData = 
+				{
+					ticket_id: tid,
+					class_id: e.id
+				}
+			break;
+		}
+    var jsonRequestData = JSON.stringify(requestData)
+    
+    Ti.API.info('Before ' + jsonRequestData);
+    mbl_dataExchange("POST", "4BFEF6D5-D4C6-446F-AAD4-407BFDE6614F/43BAA28E-177C-4BA7-84A0-6C1CFD521DEF/Tickets.svc/" + tid + "/transfer",
     	function () {
-        	Ti.API.info(this.responseText);
-        	win.navGroup.close(win);
-			win._parent.fireEvent("event_ticket_closed", { id : tid });
+        	loadticket(tid);
+			//win._parent.fireEvent("event_ticket_created", { id : 0 });
     	},
     	function (e) {  },
-    	function (e) { alert(e); });*/
-	}
+    	function (e) { alert(e); loadticket(tid); },
+    	jsonRequestData);
 });
 
 // Toolbar section
