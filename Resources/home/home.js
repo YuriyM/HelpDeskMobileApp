@@ -26,18 +26,8 @@ var tableData = [];
 
 function loadDashboard()
 {
-
-	//Ti.include('data.js');
-	
 	for(var i=0,ilen=data.length; i<ilen; i++){
-		var thisObj = data[i];
-		/*var icon =  Titanium.UI.createImageView({
-			url:thisObj.leftImage,
-			
-			width:32,
-			height:32
-		});*/
-		 
+		var thisObj = data[i];		 
 		var rowName = Titanium.UI.createLabel({
 			text:thisObj.title,
 			font:{fontSize:16,fontWeight:'bold'},
@@ -67,8 +57,6 @@ function loadDashboard()
 		    hasChild:thisObj.hasChild,
 		    className: 'home_row',
 		    leftImage: thisObj.leftImage
-		    //layout:"vertical",
-		    
 		  });
 		 	 
 		//row.add(icon);
@@ -87,26 +75,13 @@ function loadDashboard()
 
 loadDashboard();
 
-// create table view
-	var tableViewOptions = {			
-			data:tableData,
-			style:Titanium.UI.iPhone.TableViewStyle.GROUPED//,
-			//backgroundColor:'transparent',
-			//rowBackgroundColor:'white'
-		};
-var tableview = Titanium.UI.createTableView(tableViewOptions);
+var tableview = Titanium.UI.createTableView({ data:tableData, style:Titanium.UI.iPhone.TableViewStyle.GROUPED });
 
 // create table view event listener
 tableview.addEventListener('click', function(e)
 {	
 	if (e.rowData.subWindow)
 	{
-		/*var win = Titanium.UI.createWindow({
-			url:e.rowData.subWindow,
-			title:e.rowData.title
-		});
-		Titanium.UI.currentTab.open(win, {animated:true});*/		
-		
 		var win = Ti.UI.createWindow( {
 	       		title : e.rowData.subWindowTitle,				
 		        url: e.rowData.subWindow,
@@ -114,10 +89,8 @@ tableview.addEventListener('click', function(e)
 		        _parent: Titanium.UI.currentWindow,
 		        navGroup : Titanium.UI.currentWindow.navGroup,
 		        rootWindow : Titanium.UI.currentWindow.rootWindow
-		    });
-		     
-		 Titanium.UI.currentWindow.navGroup.open(win);
-		
+		    });		     
+		 Titanium.UI.currentWindow.navGroup.open(win, {animated:true});		
 	}
 });
 
@@ -125,10 +98,3 @@ tableview.addEventListener('click', function(e)
 mbl_addTablePullDownHeader(tableview, function () { tableview.data = []; }, function () { loadDashboard(); tableview.data = tableData; });
 
 win.add(tableview);
-
-
-
-//var bNavAdd = Titanium.UI.createButton({ title: 'Refresh' });
-//win.setRightNavButton(bNavAdd);
-
-

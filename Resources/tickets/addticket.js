@@ -87,11 +87,11 @@ rowDetails.selectionStyle = Ti.UI.iPhone.TableViewCellSelectionStyle.NONE;
 
 data[4] = rowDetails;
 
-// create table view
+/*// create table view
 var tableview = Titanium.UI.createTableView({
 	data:data,
 	style: Titanium.UI.iPhone.TableViewStyle.GROUPED
-});
+});*/
 
 
 // create table view
