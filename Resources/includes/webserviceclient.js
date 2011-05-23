@@ -1,4 +1,4 @@
-Ti.include('include.js');
+Ti.include('../includes/include.js');
 
 function mbl_dataExchange(requestType, requestURL, onload, ondatastream, onerror) {
 	mbl_dataExchange(requestType, requestURL, onload, ondatastream, onerror, null);
