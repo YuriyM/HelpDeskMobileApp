@@ -16,11 +16,14 @@ var lblLogin = Titanium.UI.createLabel({
     left: 10,    
     font:{fontWeight:'bold'}
 });
+var savedEmail = Ti.App.Properties.getString('mblUserEmail', '');
+Ti.API.info(savedEmail);
 var textLogin = Titanium.UI.createTextField({
 	color:'#336699',
 	left:85,
 	width:200,
-	hintText:'Required'
+	hintText:'Required',
+	value: savedEmail
 });
 rowLogin.add(lblLogin);
 rowLogin.add(textLogin);
@@ -57,20 +60,20 @@ win.add(tableview);
 
 var bNavAdd = Titanium.UI.createButton({ title: 'Sign In' });
 bNavAdd.addEventListener('click', function(e)
-{	
-	if (textLogin.value == '')
+{
+	var email = textLogin.value;
+	if (email == '')
 	{
 		alert('Please, enter login');
 		return;
 	}
-	var email = textLogin.value;
 	
-	if (textPassword.value == '')
+	var pwd = textPassword.value;
+	if (pwd == '')
 	{
 		alert('Please, enter password');
 		return;
-	}
-	var pwd = textPassword.value;
+	}	
 	
     Ti.API.info('email= ' + email + '   pwd=' + pwd);
     mbl_dataExchange("GET", "4BFEF6D5-D4C6-446F-AAD4-407BFDE6614F/43BAA28E-177C-4BA7-84A0-6C1CFD521DEF/Tickets.svc?pg=1&ps=2",
@@ -103,8 +106,14 @@ win.setRightNavButton(bNavAdd);
 var navSettings = Ti.UI.createButton({title:'Settings'});
 navSettings.addEventListener('click', function(e)
 {
-	/*Ti.App.Properties.setString('mblUserEmail', '');
-    Ti.App.Properties.setString('mblUserPwd', '');
-    win.navGroup.close(win);*/
+	var win = Ti.UI.createWindow( {
+	       		title : 'Settings',				
+		        url: 'settings.js',	
+		        backButtonTitle: 'Back',
+		        _parent: Titanium.UI.currentWindow,
+		        navGroup : Titanium.UI.currentWindow.navGroup,
+		        rootWindow : Titanium.UI.currentWindow.rootWindow
+		    });		     
+		 	Titanium.UI.currentWindow.navGroup.open(win, {animated:true});
 });
 win.leftNavButton = navSettings;

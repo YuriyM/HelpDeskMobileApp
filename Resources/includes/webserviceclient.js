@@ -6,8 +6,12 @@ function mbl_dataExchange(requestType, requestURL, onload, ondatastream, onerror
 
 function mbl_dataExchange(requestType, requestURL, onload, ondatastream, onerror, requestContent, email, pwd) {
 	var loader = Titanium.Network.createHTTPClient();
+	
+	var APIEndPoint = Ti.App.Properties.getString('mblServiceURL', serviceURL);
+	var APICertCheck = Ti.App.Properties.getBool('mblServiceCertificateCheck', validateCertificate);
+	
     loader.open(requestType, serviceURL + requestURL, true);
-    loader.validatesSecureCertificate = validateCertificate;
+    loader.validatesSecureCertificate = APICertCheck;
         
     if (onload != null)
     	loader.onload = onload;
