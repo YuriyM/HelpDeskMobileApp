@@ -76,7 +76,7 @@ bNavAdd.addEventListener('click', function(e)
 	}	
 	
     Ti.API.info('email= ' + email + '   pwd=' + pwd);
-    mbl_dataExchange("GET", "4BFEF6D5-D4C6-446F-AAD4-407BFDE6614F/43BAA28E-177C-4BA7-84A0-6C1CFD521DEF/Tickets.svc?pg=1&ps=2",
+    mbl_dataExchange("GET", "Tickets.svc?pg=1&ps=2",
     	function () {
     		Ti.API.info(this.status);
         	//Ti.API.info(this.responseText);

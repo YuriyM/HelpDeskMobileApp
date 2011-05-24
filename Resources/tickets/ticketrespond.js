@@ -49,7 +49,7 @@ bSend.addEventListener('click', function(e)
 	var requestData = {	details: textRespond.value	};
     
     Ti.API.info('Before ' + JSON.stringify(requestData));
-    mbl_dataExchange("POST", "4BFEF6D5-D4C6-446F-AAD4-407BFDE6614F/43BAA28E-177C-4BA7-84A0-6C1CFD521DEF/Tickets.svc/" + tid +"/comments/",
+    mbl_dataExchange("POST", "Tickets.svc/" + tid +"/comments/",
     	function () {
         	Ti.API.info(this.responseText);
         	win.navGroup.close(win);

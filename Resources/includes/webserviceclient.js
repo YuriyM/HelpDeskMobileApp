@@ -9,8 +9,8 @@ function mbl_dataExchange(requestType, requestURL, onload, ondatastream, onerror
 	
 	var APIEndPoint = Ti.App.Properties.getString('mblServiceURL', serviceURL);
 	var APICertCheck = Ti.App.Properties.getBool('mblServiceCertificateCheck', validateCertificate);
-	
-    loader.open(requestType, serviceURL + requestURL, true);
+	var APIOrgInstanceURL = APIEndPoint + serviceOrganization + "/" + serviceInstance + "/";
+    loader.open(requestType, APIOrgInstanceURL + requestURL, true);
     loader.validatesSecureCertificate = APICertCheck;
         
     if (onload != null)

@@ -87,7 +87,7 @@ function loadticket(ticket_id)
     };    
     
     loadIndicator.show();
-    mbl_dataExchange("GET", "4BFEF6D5-D4C6-446F-AAD4-407BFDE6614F/43BAA28E-177C-4BA7-84A0-6C1CFD521DEF/Tickets.svc/" + ticket_id + "/",
+    mbl_dataExchange("GET", "Tickets.svc/" + ticket_id + "/",
     	onload,
     	function (e) { loadIndicator.loadingdatastrem(e.progress); },
     	function (e) { loadIndicator.hide(); 
@@ -114,7 +114,7 @@ dialog.addEventListener('click',function(e)
 {
 	if (e.index == 0)
 	{
-		mbl_dataExchange("DELETE", "4BFEF6D5-D4C6-446F-AAD4-407BFDE6614F/43BAA28E-177C-4BA7-84A0-6C1CFD521DEF/Tickets.svc/" + tid + "/",
+		mbl_dataExchange("DELETE", "Tickets.svc/" + tid + "/",
     	function () {
         	Ti.API.info(this.responseText);
         	win.navGroup.close(win);
@@ -202,7 +202,7 @@ win.addEventListener('event_select_entity',function(e)
     var jsonRequestData = JSON.stringify(requestData)
     
     Ti.API.info('Before ' + jsonRequestData);
-    mbl_dataExchange("POST", "4BFEF6D5-D4C6-446F-AAD4-407BFDE6614F/43BAA28E-177C-4BA7-84A0-6C1CFD521DEF/Tickets.svc/" + tid + "/transfer",
+    mbl_dataExchange("POST", "Tickets.svc/" + tid + "/transfer",
     	function () {
         	loadticket(tid);
 			//win._parent.fireEvent("event_ticket_created", { id : 0 });
