@@ -1,3 +1,4 @@
+Ti.include('../includes/webserviceclient.js');
 Ti.include('../controls/table_pulldown_iphone.js');
 var win = Titanium.UI.currentWindow;
 
@@ -17,8 +18,6 @@ var lblLogin = Titanium.UI.createLabel({
 });
 var textLogin = Titanium.UI.createTextField({
 	color:'#336699',
-	//height:35,
-	//top:10,
 	left:85,
 	width:200,
 	hintText:'Required'
@@ -64,24 +63,48 @@ bNavAdd.addEventListener('click', function(e)
 		alert('Please, enter login');
 		return;
 	}
+	var email = textLogin.value;
 	
-	var requestData = 
+	if (textPassword.value == '')
 	{
-		login: textLogin.value,
-		password: textPassword.value
-	};
+		alert('Please, enter password');
+		return;
+	}
+	var pwd = textPassword.value;
 	
-    var jsonRequestData = JSON.stringify(requestData)
-    
-    Ti.API.info('Before ' + jsonRequestData);
-    /*mbl_dataExchange("POST", "4BFEF6D5-D4C6-446F-AAD4-407BFDE6614F/43BAA28E-177C-4BA7-84A0-6C1CFD521DEF/Tickets.svc",
+    Ti.API.info('email= ' + email + '   pwd=' + pwd);
+    mbl_dataExchange("GET", "4BFEF6D5-D4C6-446F-AAD4-407BFDE6614F/43BAA28E-177C-4BA7-84A0-6C1CFD521DEF/Tickets.svc?pg=1&ps=2",
     	function () {
-        	Ti.API.info(this.responseText);
-        	win.navGroup.close(win);
-			win._parent.fireEvent("event_ticket_created", { id : 0 });
+    		Ti.API.info(this.status);
+        	//Ti.API.info(this.responseText);
+        	Ti.App.Properties.setString('mblUserEmail', email);
+        	Ti.App.Properties.setString('mblUserPwd', pwd);
+        	textPassword.value = '';
+        	
+        	var win = Ti.UI.createWindow( {
+	       		title : 'HelpDesk',				
+		        url: 'home.js',	
+		        //backButtonTitle: 'Sign Out',
+		        _parent: Titanium.UI.currentWindow,
+		        navGroup : Titanium.UI.currentWindow.navGroup,
+		        rootWindow : Titanium.UI.currentWindow.rootWindow
+		    });		     
+		 	Titanium.UI.currentWindow.navGroup.open(win, {animated:true});
     	},
     	function (e) {  },
-    	function (e) { alert(e); },
-    	jsonRequestData);*/
+    	function (e) { alert('Credentials are invalid. Edit and try again.'); },
+    	null,
+    	email,
+    	pwd
+    	);
 });
 win.setRightNavButton(bNavAdd);
+
+var navSettings = Ti.UI.createButton({title:'Settings'});
+navSettings.addEventListener('click', function(e)
+{
+	/*Ti.App.Properties.setString('mblUserEmail', '');
+    Ti.App.Properties.setString('mblUserPwd', '');
+    win.navGroup.close(win);*/
+});
+win.leftNavButton = navSettings;

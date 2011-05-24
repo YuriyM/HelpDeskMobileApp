@@ -98,3 +98,12 @@ tableview.addEventListener('click', function(e)
 mbl_addTablePullDownHeader(tableview, function () { tableview.data = []; }, function () { loadDashboard(); tableview.data = tableData; });
 
 win.add(tableview);
+
+var navSignOut = Ti.UI.createButton({title:'Sign Out'});
+navSignOut.addEventListener('click', function(e)
+{
+	Ti.App.Properties.setString('mblUserEmail', '');
+    Ti.App.Properties.setString('mblUserPwd', '');
+    win.navGroup.close(win);
+});
+win.leftNavButton = navSignOut;

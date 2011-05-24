@@ -1,10 +1,10 @@
 Ti.include('../includes/include.js');
 
 function mbl_dataExchange(requestType, requestURL, onload, ondatastream, onerror) {
-	mbl_dataExchange(requestType, requestURL, onload, ondatastream, onerror, null);
+	mbl_dataExchange(requestType, requestURL, onload, ondatastream, onerror, null, null, null);
 }
 
-function mbl_dataExchange(requestType, requestURL, onload, ondatastream, onerror, requestContent) {
+function mbl_dataExchange(requestType, requestURL, onload, ondatastream, onerror, requestContent, email, pwd) {
 	var loader = Titanium.Network.createHTTPClient();
     loader.open(requestType, serviceURL + requestURL, true);
     loader.validatesSecureCertificate = validateCertificate;
@@ -19,7 +19,18 @@ function mbl_dataExchange(requestType, requestURL, onload, ondatastream, onerror
     	loader.onerror = onerror;
     Ti.API.info('requestContent=' + requestContent);
     loader.setRequestHeader("Content-Type", "application/rss+xml");
-    loader.setRequestHeader("Authorization", authorizationData);
+    
+    Ti.API.info('Web1 email= ' + email + '   pwd=' + pwd);
+    if (email == null)
+   	{
+    	email = Ti.App.Properties.getString('mblUserEmail', serviceLogin);
+    }
+    if (pwd == null)
+	{	
+		pwd = Ti.App.Properties.getString('mblUserPwd', servicePassword);
+	}
+	Ti.API.info('Web2 email= ' + email + '   pwd=' + pwd);
+    loader.setRequestHeader("Authorization", createAuthHeader(email, pwd));
     if (requestContent == null)
     	loader.send();
     else
