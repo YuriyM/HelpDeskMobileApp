@@ -10,20 +10,9 @@ tkt_lid = 0;
 tkt_techid = 0;
 tkt_cid = 0;
 
-var previousTicket = Titanium.UI.createButton({
-	systemButton:103
-});
+var previousTicket = Titanium.UI.createButton({ systemButton:103 });
 
-var nextTicket = Titanium.UI.createButton({
-	systemButton:104
-});
-
-
-
-var buttonObjects = [
-	{image:'../images/navbtns/ver_top_normal.png', width:35, height:27 },
-	{image:'../images/navbtns/ver_bottom_normal.png', width:35, height:27}
-];
+var nextTicket = Titanium.UI.createButton({ systemButton:104 });
 
 var buttonObjects1 = [
 	{image:'../images/navbtns/ver_top_hidden.png', width:35, height:27 },
@@ -32,14 +21,33 @@ var buttonObjects1 = [
 
 var buttonObjects2 = [
 	{image:'../images/navbtns/ver_top_normal.png', width:35, height:27 },
+	{image:'../images/navbtns/ver_bottom_normal.png', width:35, height:27}
+];
+
+var buttonObjects3 = [
+	{image:'../images/navbtns/ver_top_normal.png', width:35, height:27 },
 	{image:'../images/navbtns/ver_bottom_hidden.png', width:35, height:27}
 ];
 
-var nav_bar = Titanium.UI.createButtonBar({
-	labels:buttonObjects,
-	style:Titanium.UI.iPhone.SystemButtonStyle.BAR
-});
+var buttonObjects4 = [
+	{image:'../images/navbtns/ver_top_hidden.png', width:35, height:27 },
+	{image:'../images/navbtns/ver_bottom_hidden.png', width:35, height:27}
+];
 
+var nav_bar = Titanium.UI.createButtonBar({ style:Titanium.UI.iPhone.SystemButtonStyle.BAR });
+
+function updateNavBar()
+{
+	if (tickets.length === 1)
+		nav_bar.labels = buttonObjects4;
+	else if (tid === tickets[0])
+		nav_bar.labels = buttonObjects1;
+	else if (tid === tickets[tickets.length - 1])
+		nav_bar.labels = buttonObjects3;
+	else
+		nav_bar.labels = buttonObjects2;
+}
+updateNavBar();
 win.setRightNavButton(nav_bar);
 
 nav_bar.addEventListener('click', function(e)
@@ -65,6 +73,7 @@ nav_bar.addEventListener('click', function(e)
 				}
 			}
 	// add button bar change
+	updateNavBar();
 });
 
 var viewTicket = Titanium.UI.createTableView({ id: 'tvTickets', data: []/*, separatorStyle: Titanium.UI.iPhone.TableViewSeparatorStyle.NONE*/ });
