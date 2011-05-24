@@ -85,9 +85,8 @@ bNavAdd.addEventListener('click', function(e)
         	textPassword.value = '';
         	
         	var win = Ti.UI.createWindow( {
-	       		title : 'HelpDesk',				
-		        url: 'home.js',	
-		        //backButtonTitle: 'Sign Out',
+	       		title : 'Dashboard',				
+		        url: 'home.js',
 		        _parent: Titanium.UI.currentWindow,
 		        navGroup : Titanium.UI.currentWindow.navGroup,
 		        rootWindow : Titanium.UI.currentWindow.rootWindow
@@ -95,7 +94,7 @@ bNavAdd.addEventListener('click', function(e)
 		 	Titanium.UI.currentWindow.navGroup.open(win, {animated:true});
     	},
     	function (e) {  },
-    	function (e) { alert('Credentials are invalid. Edit and try again.'); },
+    	function (e) { alert('Invalid Credentials'); },
     	null,
     	email,
     	pwd

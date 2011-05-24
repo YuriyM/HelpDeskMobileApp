@@ -7,6 +7,8 @@ var data = [
 	{title:'Locations', hasChild:true, subWindow:'../tickets/ticket.js', leftImage: '../images/MAIL.PNG'},
 	{title:'Tickets', hasChild:true, subWindow:'../tickets/ticket.js', leftImage: '../images/MAIL.PNG'},
 	{title:'Projects', hasChild:true, subWindow:'../tickets/ticket.js', leftImage: '../images/MAIL.PNG'},
+	// Active link
+	{title:'Tickets', hasChild:true, subWindow:'../tickets/ticket.js', subWindowURL:'../tickets/ticket.js', header: 'Test Tickets', leftImage: '../images/MAIL.PNG'},
 	// Tickets section
 	{title:'New Messages', hasChild:true, subWindow:'../tickets/ticket.js', header: 'Ticket Summary', leftImage: '../images/MAIL.PNG'},
 	{title:'Open Tickets', hasChild:true, subWindow:'../tickets/ticket.js', leftImage: '../images/MAIL.PNG'},
@@ -27,7 +29,7 @@ var tableData = [];
 function loadDashboard()
 {
 	for(var i=0,ilen=data.length; i<ilen; i++){
-		var thisObj = data[i];		 
+		var thisObj = data[i];
 		var rowName = Titanium.UI.createLabel({
 			text:thisObj.title,
 			font:{fontSize:16,fontWeight:'bold'},
@@ -37,9 +39,11 @@ function loadDashboard()
 			height:18
 		});
 		
+		if (!thisObj.subWindowURL)
+			rowName.color = '#999999';
 		var k = i;
-		if (k > 9)
-		 k = k - 10;
+		if (k > 10)
+		 k = k - 11;
 		
 		var rowStatus = Titanium.UI.createLabel({
 			text: k + 1,
@@ -61,13 +65,13 @@ function loadDashboard()
 		 	 
 		//row.add(icon);
 		row.add(rowName);
-		if (i > 3 && i != 9)
+		if (i > 4 && i != 9)
 			row.add(rowStatus);
 		if (thisObj.header)
 			row.header = thisObj.header;
 		row.subWindow = thisObj.subWindow;
+		row.subWindowURL = thisObj.subWindowURL;
 		row.subWindowTitle = thisObj.title;
-		//row.title = thisObj.title;
 		tableData.push(row);
 	}
 	//alert(Ti.App.getArguments());
@@ -80,11 +84,11 @@ var tableview = Titanium.UI.createTableView({ data:tableData, style:Titanium.UI.
 // create table view event listener
 tableview.addEventListener('click', function(e)
 {	
-	if (e.rowData.subWindow)
+	if (e.rowData.subWindowURL) // just to exlude imcomplete windows
 	{
 		var win = Ti.UI.createWindow( {
 	       		title : e.rowData.subWindowTitle,				
-		        url: e.rowData.subWindow,
+		        url: e.rowData.subWindowURL,
 		        
 		        _parent: Titanium.UI.currentWindow,
 		        navGroup : Titanium.UI.currentWindow.navGroup,
