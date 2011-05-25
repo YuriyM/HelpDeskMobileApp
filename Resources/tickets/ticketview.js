@@ -233,7 +233,7 @@ var add = Titanium.UI.createButton({
 add.addEventListener('click', function()
 {
 	var win = Titanium.UI.createWindow({
-			url:"addticket.js",
+			url:"ticket_createquick.js",
 			title:"Add Ticket",
 						
 			_parent: Titanium.UI.currentWindow,
