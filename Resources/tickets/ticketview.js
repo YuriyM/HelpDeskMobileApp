@@ -263,7 +263,7 @@ var respond = Titanium.UI.createButton({
 respond.addEventListener('click', function()
 {
 		var win = Titanium.UI.createWindow({
-			url:"ticketrespond.js",
+			url:"ticket_respond.js",
 			title:"Write Ticket Response",
 			tid: tid,
 			_parent: Titanium.UI.currentWindow,
