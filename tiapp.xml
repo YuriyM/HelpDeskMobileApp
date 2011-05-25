@@ -8,10 +8,10 @@
 <id>K38L7HPDJV.com.bigwebapps.helpdesk.mobile</id>
 <name>MobileV3</name>
 <version>1.0</version>
-<publisher>svp</publisher>
+<publisher>bigWebApps Inc.</publisher>
 <url>http://www.bigwebapps.com</url>
 <description>No description provided</description>
-<copyright>2011 by svp</copyright>
+<copyright>2011 by bigWebApps Inc.</copyright>
 <icon>default_app_logo.png</icon>
     <persistent-wifi>false</persistent-wifi>
     <prerendered-icon>false</prerendered-icon>
