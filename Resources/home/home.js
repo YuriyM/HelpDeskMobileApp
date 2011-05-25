@@ -1,4 +1,4 @@
-Ti.include('../controls/table_pulldown_iphone.js');
+Ti.include('../controls/control_table_pulldown.js');
 var win = Titanium.UI.currentWindow;
 
 var data = [

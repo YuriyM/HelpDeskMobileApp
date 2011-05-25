@@ -7,7 +7,6 @@
  */
 
 Ti.include('../includes/network_webservice_client.js');
-Ti.include('../controls/table_pulldown_iphone.js');
 Ti.include('../controls/load_indicator_iphone.js');
 
 var win = Ti.UI.currentWindow;
