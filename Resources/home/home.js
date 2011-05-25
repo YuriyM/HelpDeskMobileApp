@@ -3,25 +3,25 @@ var win = Titanium.UI.currentWindow;
 
 var data = [
 	//General section
-	{title:'Accounts', hasChild:true, subWindow:'../tickets/ticket.js', leftImage: '../images/MAIL.PNG'},
-	{title:'Locations', hasChild:true, subWindow:'../tickets/ticket.js', leftImage: '../images/MAIL.PNG'},
-	{title:'Tickets', hasChild:true, subWindow:'../tickets/ticket.js', leftImage: '../images/MAIL.PNG'},
-	{title:'Projects', hasChild:true, subWindow:'../tickets/ticket.js', leftImage: '../images/MAIL.PNG'},
+	{title:'Accounts', hasChild:true, subWindow:'../tickets/ticket_list.js', leftImage: '../images/MAIL.PNG'},
+	{title:'Locations', hasChild:true, subWindow:'../tickets/ticket_list.js', leftImage: '../images/MAIL.PNG'},
+	{title:'Tickets', hasChild:true, subWindow:'../tickets/ticket_list.js', leftImage: '../images/MAIL.PNG'},
+	{title:'Projects', hasChild:true, subWindow:'../tickets/ticket_list.js', leftImage: '../images/MAIL.PNG'},
 	// Active link
-	{title:'Tickets', hasChild:true, subWindow:'../tickets/ticket.js', subWindowURL:'../tickets/ticket.js', header: 'Test Tickets', leftImage: '../images/MAIL.PNG'},
+	{title:'Tickets', hasChild:true, subWindow:'../tickets/ticket_list.js', subWindowURL:'../tickets/ticket_list.js', header: 'Test Tickets', leftImage: '../images/MAIL.PNG'},
 	// Tickets section
-	{title:'New Messages', hasChild:true, subWindow:'../tickets/ticket.js', header: 'Ticket Summary', leftImage: '../images/MAIL.PNG'},
-	{title:'Open Tickets', hasChild:true, subWindow:'../tickets/ticket.js', leftImage: '../images/MAIL.PNG'},
-	{title:'Open as End User', hasChild:true, subWindow:'../tickets/ticket.js', leftImage: '../images/MAIL.PNG'},
-	{title:'On Hold', hasChild:true, subWindow:'../tickets/ticket.js', leftImage: '../images/MAIL.PNG'},
-	{title:'Waiting On Parts', hasChild:true, subWindow:'../tickets/ticket.js', leftImage: '../images/MAIL.PNG'},
-	{title:'Follow-Up Dates', hasChild:true, subWindow:'../tickets/ticket.js', leftImage: '../images/MAIL.PNG'},
-	{title:'Unconfirmed', hasChild:true, subWindow:'../tickets/ticket.js', leftImage: '../images/MAIL.PNG'},
+	{title:'New Messages', hasChild:true, subWindow:'../tickets/ticket_list.js', header: 'Ticket Summary', leftImage: '../images/MAIL.PNG'},
+	{title:'Open Tickets', hasChild:true, subWindow:'../tickets/ticket_list.js', leftImage: '../images/MAIL.PNG'},
+	{title:'Open as End User', hasChild:true, subWindow:'../tickets/ticket_list.js', leftImage: '../images/MAIL.PNG'},
+	{title:'On Hold', hasChild:true, subWindow:'../tickets/ticket_list.js', leftImage: '../images/MAIL.PNG'},
+	{title:'Waiting On Parts', hasChild:true, subWindow:'../tickets/ticket_list.js', leftImage: '../images/MAIL.PNG'},
+	{title:'Follow-Up Dates', hasChild:true, subWindow:'../tickets/ticket_list.js', leftImage: '../images/MAIL.PNG'},
+	{title:'Unconfirmed', hasChild:true, subWindow:'../tickets/ticket_list.js', leftImage: '../images/MAIL.PNG'},
 	// Queues
 	{title:'Future Consideration', hasChild:true, subWindow:'../tickets/ticket.js', header: 'Queues', leftImage: '../images/MAIL.PNG'},
-	{title:'MC3 Upgrade', hasChild:true, subWindow:'../tickets/ticket.js', leftImage: '../images/MAIL.PNG'},
-	{title:'Pre-Development', hasChild:true, subWindow:'../tickets/ticket.js', leftImage: '../images/MAIL.PNG'},
-	{title:'Website fixes', hasChild:true, subWindow:'../tickets/ticket.js', leftImage: '../images/MAIL.PNG'}
+	{title:'MC3 Upgrade', hasChild:true, subWindow:'../tickets/ticket_list.js', leftImage: '../images/MAIL.PNG'},
+	{title:'Pre-Development', hasChild:true, subWindow:'../tickets/ticket_list.js', leftImage: '../images/MAIL.PNG'},
+	{title:'Website fixes', hasChild:true, subWindow:'../tickets/ticket_list.js', leftImage: '../images/MAIL.PNG'}
 ];
 
 var tableData = [];
