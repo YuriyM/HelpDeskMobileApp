@@ -1,9 +1,19 @@
+/*
+ *	Custom Global Load Indicator 
+ * 	How-To:
+ * 		Show
+ *		Ti.App.fireEvent('show_global_indicator',{'caution': 'what load'});
+ * 
+ * 		Hide
+ * 		Ti.App.fireEvent('hide_global_indicator');
+ */
+
 (function()
 {
 	var indWin = null;
 	var actInd = null;
 
-	if (Ti.Platform.osname != 'android')
+	if (Ti.Platform.osname !== 'android')
 	{
 		// window container
 		indWin = Titanium.UI.createWindow({
@@ -31,7 +41,7 @@
 		width:30,
 	});
 	
-	if (Ti.Platform.osname != 'android')
+	if (Ti.Platform.osname !== 'android')
 	{
 		indWin.add(actInd);
 
@@ -51,7 +61,7 @@
 	
 	function showIndicator()
 	{
-		if (Ti.Platform.osname != 'android')
+		if (Ti.Platform.osname !== 'android')
 			indWin.open();
 		actInd.show();
 	}
@@ -59,19 +69,16 @@
 	function hideIndicator()
 	{
 		actInd.hide();
-		if (Ti.Platform.osname != 'android') {
+		if (Ti.Platform.osname !== 'android')
 			indWin.close({opacity:0,duration:500});
-		}
 	};
 	
 	Titanium.App.addEventListener('show_global_indicator', function(e)
 	{
-		Ti.API.info("SHOW GLOBAL INDICATOR");
 		showIndicator();
 	});
 	Titanium.App.addEventListener('hide_global_indicator', function(e)
 	{
-		Ti.API.info("HIDE GLOBAL INDICATOR");
 		hideIndicator();
 	});
 

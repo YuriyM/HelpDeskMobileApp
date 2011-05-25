@@ -1,6 +1,13 @@
+/*
+ * 'mblUserEmail' - Ti.App.Properties string name for user email
+ * 'mblUserPwd' - Ti.App.Properties string name for user password
+ */
 Ti.include('../includes/network_webservice_client.js');
 var win = Titanium.UI.currentWindow;
 
+//
+// Window controls initialization
+//
 var data = [];
 
 var rowLogin = Ti.UI.createTableViewRow({
@@ -15,8 +22,8 @@ var lblLogin = Titanium.UI.createLabel({
     left: 10,    
     font:{fontWeight:'bold'}
 });
+
 var savedEmail = Ti.App.Properties.getString('mblUserEmail', '');
-Ti.API.info(savedEmail);
 var textLogin = Titanium.UI.createTextField({
 	color:'#336699',
 	left:85,
@@ -32,6 +39,7 @@ var rowPassword = Ti.UI.createTableViewRow({
 	height:55,
 	selectionStyle: Ti.UI.iPhone.TableViewCellSelectionStyle.NONE
 });
+
 var lblPassword = Titanium.UI.createLabel({
     text:'Password',
     height:'auto',
@@ -39,6 +47,7 @@ var lblPassword = Titanium.UI.createLabel({
     left: 10,    
     font:{fontWeight:'bold'}
 });
+
 var textPassword = Titanium.UI.createTextField({
 	color:'#336699',
 	left:85,
@@ -50,35 +59,40 @@ rowPassword.add(lblPassword);
 rowPassword.add(textPassword);
 data[1] = rowPassword;
 
-// create table view
-var tableview = Titanium.UI.createTableView({
-	data:data,
-	style: Titanium.UI.iPhone.TableViewStyle.GROUPED
-});
-win.add(tableview);
+// add created table view to window
+win.add(
+	Titanium.UI.createTableView({
+		data:data,
+		style: Titanium.UI.iPhone.TableViewStyle.GROUPED
+	})
+);
+// === complete controls initialization ===
 
+//
+// Nav bar controls initialization
+//
 var bNavAdd = Titanium.UI.createButton({ title: 'Sign In' });
 bNavAdd.addEventListener('click', function(e)
 {
 	var email = textLogin.value;
-	if (email == '')
+	if (email.length === 0)
 	{
 		alert('Please, enter login');
 		return;
 	}
 	
 	var pwd = textPassword.value;
-	if (pwd == '')
+	if (pwd.length === 0)
 	{
 		alert('Please, enter password');
 		return;
-	}	
+	}
 	
+	Ti.App.fireEvent('show_global_indicator',{'caution': 'Signing In'});
     Ti.API.info('email= ' + email + '   pwd=' + pwd);
     mbl_dataExchange("GET", "Tickets.svc?pg=1&ps=2",
     	function () {
-    		Ti.API.info(this.status);
-        	//Ti.API.info(this.responseText);
+    		Ti.App.fireEvent('hide_global_indicator');
         	Ti.App.Properties.setString('mblUserEmail', email);
         	Ti.App.Properties.setString('mblUserPwd', pwd);
         	textPassword.value = '';
@@ -93,7 +107,7 @@ bNavAdd.addEventListener('click', function(e)
 		 	Titanium.UI.currentWindow.navGroup.open(win, {animated:true});
     	},
     	function (e) {  },
-    	function (e) { alert('Invalid Credentials'); },
+    	function (e) { Ti.App.fireEvent('hide_global_indicator'); alert('Invalid Credentials'); },
     	null,
     	email,
     	pwd
@@ -106,8 +120,7 @@ navSettings.addEventListener('click', function(e)
 {
 	var win = Ti.UI.createWindow( {
 	       		title : 'Settings',				
-		        url: 'settings.js',	
-		        backButtonTitle: 'Back',
+		        url: 'settings.js',
 		        _parent: Titanium.UI.currentWindow,
 		        navGroup : Titanium.UI.currentWindow.navGroup,
 		        rootWindow : Titanium.UI.currentWindow.rootWindow
@@ -115,3 +128,4 @@ navSettings.addEventListener('click', function(e)
 		 	Titanium.UI.currentWindow.navGroup.open(win, {animated:true});
 });
 win.leftNavButton = navSettings;
+// === complete Nav bar controls initialization ===

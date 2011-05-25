@@ -1,6 +1,45 @@
 Ti.include('../controls/control_table_pulldown.js');
 var win = Titanium.UI.currentWindow;
 
+//
+// Create main Table View
+//
+var tvDashboard = Titanium.UI.createTableView({ style:Titanium.UI.iPhone.TableViewStyle.GROUPED });
+
+tvDashboard.addEventListener('click', function(e)
+{	
+	if (e.rowData.subWindowURL) // just to exlude imcomplete windows
+	{
+		var win = Ti.UI.createWindow( {
+	       	title : e.rowData.subWindowTitle,				
+		    url: e.rowData.subWindowURL,
+		    _parent: Titanium.UI.currentWindow,
+		    navGroup : Titanium.UI.currentWindow.navGroup,
+		    rootWindow : Titanium.UI.currentWindow.rootWindow
+		});		     
+		Titanium.UI.currentWindow.navGroup.open(win, {animated:true});		
+	}
+});
+
+// Pull down section init
+mbl_addTablePullDownHeader(tvDashboard, function () { tvDashboard.setData([]); }, function () { loadDashboard(); });
+
+win.add(tvDashboard);
+
+//
+// Nav Bar Init
+//
+var navSignOut = Ti.UI.createButton({title:'Sign Out'});
+navSignOut.addEventListener('click', function(e)
+{
+    Ti.App.Properties.setString('mblUserPwd', '');
+    win.navGroup.close(win);
+});
+win.leftNavButton = navSignOut;
+
+//
+// Fill Main Dashboard TableView
+//
 var data = [
 	//General section
 	{title:'Accounts', hasChild:true, subWindow:'../tickets/ticket_list.js', leftImage: '../images/MAIL.PNG'},
@@ -28,8 +67,16 @@ var tableData = [];
 
 function loadDashboard()
 {
-	for(var i=0,ilen=data.length; i<ilen; i++){
+	for(var i=0,ilen=data.length; i<ilen; i++)
+	{
 		var thisObj = data[i];
+		
+		var row = Ti.UI.createTableViewRow({
+		    className: 'home_row',
+		    leftImage: thisObj.leftImage,
+		    hasChild: thisObj.hasChild
+		  });
+		
 		var rowName = Titanium.UI.createLabel({
 			text:thisObj.title,
 			font:{fontSize:16,fontWeight:'bold'},
@@ -38,75 +85,36 @@ function loadDashboard()
 			left:40,
 			height:18
 		});
-		
 		if (!thisObj.subWindowURL)
 			rowName.color = '#999999';
+		row.add(rowName);
+			
 		var k = i;
 		if (k > 10)
-		 k = k - 11;
+			k = k - 11;
 		
 		var rowStatus = Titanium.UI.createLabel({
 			text: k + 1,
 			backgroundColor: '#999999',
 			color:'#ffffff',
-			//font:{fontSize:16,fontWeight:'bold'},
 			width:14,
 			height: 18,
 			textAlign:'center',
 			right:10
 		});
-		
-		var row = Ti.UI.createTableViewRow({
-		    className:"home_row",
-		    hasChild:thisObj.hasChild,
-		    className: 'home_row',
-		    leftImage: thisObj.leftImage
-		  });
-		 	 
-		//row.add(icon);
-		row.add(rowName);
-		if (i > 4 && i != 9)
+		if (i > 4 && i !== 9)
 			row.add(rowStatus);
+			
 		if (thisObj.header)
 			row.header = thisObj.header;
+			
 		row.subWindow = thisObj.subWindow;
 		row.subWindowURL = thisObj.subWindowURL;
 		row.subWindowTitle = thisObj.title;
+		
 		tableData.push(row);
 	}
-	//alert(Ti.App.getArguments());
+	tvDashboard.setData(tableData);
 }
 
 loadDashboard();
-
-var tableview = Titanium.UI.createTableView({ data:tableData, style:Titanium.UI.iPhone.TableViewStyle.GROUPED });
-
-// create table view event listener
-tableview.addEventListener('click', function(e)
-{	
-	if (e.rowData.subWindowURL) // just to exlude imcomplete windows
-	{
-		var win = Ti.UI.createWindow( {
-	       		title : e.rowData.subWindowTitle,				
-		        url: e.rowData.subWindowURL,
-		        
-		        _parent: Titanium.UI.currentWindow,
-		        navGroup : Titanium.UI.currentWindow.navGroup,
-		        rootWindow : Titanium.UI.currentWindow.rootWindow
-		    });		     
-		 Titanium.UI.currentWindow.navGroup.open(win, {animated:true});		
-	}
-});
-
-// Pull dowm section
-mbl_addTablePullDownHeader(tableview, function () { tableview.data = []; }, function () { loadDashboard(); tableview.data = tableData; });
-
-win.add(tableview);
-
-var navSignOut = Ti.UI.createButton({title:'Sign Out'});
-navSignOut.addEventListener('click', function(e)
-{
-    Ti.App.Properties.setString('mblUserPwd', '');
-    win.navGroup.close(win);
-});
-win.leftNavButton = navSignOut;
