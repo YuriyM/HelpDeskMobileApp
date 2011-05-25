@@ -1,5 +1,5 @@
 Ti.include('../includes/webserviceclient.js');
-Ti.include('../includes/tickettableview.js');
+Ti.include('../includes/ticket_tableview.js');
 Ti.include('../controls/load_indicator_iphone.js');
 
 var win = Titanium.UI.currentWindow;
