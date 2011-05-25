@@ -10,17 +10,18 @@ function mbl_dataExchange(requestType, requestURL, onload, ondatastream, onerror
 	var APIEndPoint = Ti.App.Properties.getString('mblServiceURL', serviceURL);
 	var APICertCheck = Ti.App.Properties.getBool('mblServiceCertificateCheck', validateCertificate);
 	var APIOrgInstanceURL = APIEndPoint + serviceOrganization + "/" + serviceInstance + "/";
-    loader.open(requestType, APIOrgInstanceURL + requestURL, true);
-    loader.validatesSecureCertificate = APICertCheck;
-        
+	
+	if (ondatastream != null)
+    	loader.ondatastream = ondatastream;
     if (onload != null)
     	loader.onload = onload;
-    	
-    if (ondatastream != null)
-    	loader.ondatastream = ondatastream;
     
     if (onerror != null)
     	loader.onerror = onerror;
+    	
+    loader.open(requestType, APIOrgInstanceURL + requestURL, true);
+    loader.validatesSecureCertificate = APICertCheck;
+    
     Ti.API.info('requestContent=' + requestContent);
     loader.setRequestHeader("Content-Type", "application/rss+xml");
     
