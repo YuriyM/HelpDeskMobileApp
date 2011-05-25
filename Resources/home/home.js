@@ -22,7 +22,7 @@ tvDashboard.addEventListener('click', function(e)
 });
 
 // Pull down section init
-mbl_addTablePullDownHeader(tvDashboard, function () { tvDashboard.setData([]); }, function () { loadDashboard(); });
+mbl_addTablePullDownHeader(tvDashboard, function () { tvDashboard.setData([]); }, loadDashboard );
 
 win.add(tvDashboard);
 

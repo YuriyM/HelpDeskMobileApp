@@ -147,3 +147,24 @@ tabGroupHome.open();*/
     icon: 'images/KS_nav_ui.png';   
     title: "Assets";    
 }*/
+
+
+//----------------------
+// CODE FIND SYSTEM BUTTONS NUMBER CODES
+//----------------------
+/*var kk = 100;
+setInterval(function () { 
+	kk++; 
+	var next1= Titanium.UI.createButton({systemButton:kk});
+	win.toolbar = [flexSpace, next1,flexSpace];
+	win.title = kk;
+}, 1000);*/
+
+//----------------------
+// FIXED SPACE FOR WINDOW TOOLBAR
+//----------------------
+/*// used to create a fixed amount of space between two items on the toolbar
+var fixedSpace = Titanium.UI.createButton({
+	systemButton:Titanium.UI.iPhone.SystemButton.FIXED_SPACE,
+	width:50
+});*/

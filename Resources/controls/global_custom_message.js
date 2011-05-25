@@ -1,3 +1,9 @@
+/*
+ *	Custom Global Custom Message
+ * 	How-To:
+ * 		Show
+ *		Ti.App.fireEvent('show_complete_message', { labelText: 'Ticket created. Id=' + e.id });
+ */
 (function()
 {
 	// window container

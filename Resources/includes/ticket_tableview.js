@@ -14,12 +14,11 @@ function createTicketTableView(tickets, tickets_id)
             var level = tickets[i].level;
             var ticket_time = 'Yesterday'; // TODO tickets[i].TicketTime
             
-            //Ti.API.info(user);
             var label_color = '#888888';
             var text_color = '#222222';
             
-            var label_size = 13;//11
-            var text_size = 14;//12
+            var label_size = 13;
+            var text_size = 14;
             
             var left_indent = 20;
             var top_indent = 6;
@@ -94,7 +93,7 @@ function createTicketTableView(tickets, tickets_id)
                 width: 'auto',                
                 height: text_size,
                 color:'#2d76d9',
-                font:{fontSize:text_size, fontWeight:'normal'/*, fontFamily:'Arial'*/} 
+                font:{fontSize:text_size, fontWeight:'normal'} 
             });
             time_view.add(time_lbl);
             row1view.add(time_view);
@@ -108,7 +107,7 @@ function createTicketTableView(tickets, tickets_id)
                 width: 307, // depends on screen width
                 height: 17,
                 color: '#6d0f14',
-                font:{fontSize:17,/*fontWeight:'normal', fontStyle:'italic', */fontFamily:'TimesNewRomanPS-BoldItalicMT'}
+                font:{fontSize:17, fontFamily:'TimesNewRomanPS-BoldItalicMT'}
             });
             post_view.add(ticket_lbl);
             
@@ -117,7 +116,7 @@ function createTicketTableView(tickets, tickets_id)
                 height: text_size,
                 top: top_indent,                
                 left: left_indent,
-                right: 0//, backgroundColor: 'magenta'
+                right: 0
             });
             
             var account_view = Titanium.UI.createView({            	
@@ -126,7 +125,6 @@ function createTicketTableView(tickets, tickets_id)
                 layout: 'horizontal',
                 top: 0,                
                 left: 0,
-                //backgroundColor: 'red',
                 zIndex: 50
             });         
             
@@ -146,7 +144,7 @@ function createTicketTableView(tickets, tickets_id)
 	                width: 'auto',                
 	                height: text_size,
 	                color:text_color,
-	                font:{fontSize:text_size, fontWeight:'normal'/*, fontFamily:'Arial'*/}             
+	                font:{fontSize:text_size, fontWeight:'normal'}             
 	            });
 	            account_view.add(account_lbl);
             }
@@ -157,7 +155,7 @@ function createTicketTableView(tickets, tickets_id)
                 width: 'auto',
                 height: label_size,
                 color:label_color,
-				font:{fontSize:label_size, fontWeight:'normal'/*, fontFamily:'Arial'*/}
+				font:{fontSize:label_size, fontWeight:'normal'}
             });
             account_view.add(accountheader_lbl);
             account_row.add(account_view);
@@ -178,7 +176,7 @@ function createTicketTableView(tickets, tickets_id)
                 width: 'auto',                
                 height: text_size,
                 color:'#3f6c19',
-                font:{fontSize:text_size, fontWeight:'normal'/*, fontFamily:'Arial'*/}            
+                font:{fontSize:text_size, fontWeight:'normal'}
             });      
             status_view.add(status_lbl);
             account_row.add(status_view);
@@ -191,7 +189,7 @@ function createTicketTableView(tickets, tickets_id)
                 height: text_size,
                 top: top_indent,                
                 left: left_indent,
-                right: 0//, backgroundColor: 'magenta'
+                right: 0
             });
             
             var tech_view = Titanium.UI.createView({            	
@@ -200,7 +198,6 @@ function createTicketTableView(tickets, tickets_id)
                 layout: 'horizontal',
                 top: 0,                
                 left: 0,
-                //backgroundColor: 'red',
                 zIndex: 50
             });            
             
@@ -211,7 +208,7 @@ function createTicketTableView(tickets, tickets_id)
                 width: 'auto',
                 height: label_size,
                 color:label_color,
-				font:{fontSize:label_size, fontWeight:'normal'/*, fontFamily:'Arial'*/}
+				font:{fontSize:label_size, fontWeight:'normal' }
             });
            
             var tech_lbl = Titanium.UI.createLabel({
@@ -221,7 +218,7 @@ function createTicketTableView(tickets, tickets_id)
                 width: 'auto',                
                 height: text_size,
                 color:text_color,
-                font:{fontSize:text_size, fontWeight:'normal'/*, fontFamily:'Arial'*/}             
+                font:{fontSize:text_size, fontWeight:'normal' }
             });
             tech_view.add(tech_lbl);
             tech_view.add(techheader_lbl);
@@ -243,7 +240,7 @@ function createTicketTableView(tickets, tickets_id)
                 width: 'auto',                
                 height: text_size,
                 color:text_color,
-                font:{fontSize:text_size, fontWeight:'normal'/*, fontFamily:'Arial'*/} 
+                font:{fontSize:text_size, fontWeight:'normal'} 
             });
             
             var levelheader_lbl = Titanium.UI.createLabel({
@@ -253,7 +250,7 @@ function createTicketTableView(tickets, tickets_id)
                 width: 'auto',                
                 height: label_size,
                 color:label_color,
-                font:{fontSize:label_size, fontWeight:'normal'/*, fontFamily:'Arial'*/}            
+                font:{fontSize:label_size, fontWeight:'normal'}
             });         
             level_view.add(level_lbl);
             level_view.add(levelheader_lbl);
@@ -267,7 +264,7 @@ function createTicketTableView(tickets, tickets_id)
                 height: text_size,
                 top: top_indent,                
                 left: left_indent,
-                right: 0//, backgroundColor: 'magenta'
+                right: 0
             });
             
             var class_view = Titanium.UI.createView({            	
@@ -276,7 +273,6 @@ function createTicketTableView(tickets, tickets_id)
                 layout: 'horizontal',
                 top: 0,                
                 left: 0,
-                //backgroundColor: 'red',
                 zIndex: 50
             });            
             
@@ -287,7 +283,7 @@ function createTicketTableView(tickets, tickets_id)
                 width: 'auto',
                 height: label_size,
                 color:label_color,
-				font:{fontSize:label_size, fontWeight:'normal'/*, fontFamily:'Arial'*/}
+				font:{fontSize:label_size, fontWeight:'normal'}
             });
            
             var class_lbl = Titanium.UI.createLabel({
@@ -297,7 +293,7 @@ function createTicketTableView(tickets, tickets_id)
                 width: 'auto',                
                 height: text_size,
                 color:text_color,
-                font:{fontSize:text_size, fontWeight:'normal'/*, fontFamily:'Arial'*/}             
+                font:{fontSize:text_size, fontWeight:'normal'}             
             });
             class_view.add(class_lbl);
             class_view.add(classheader_lbl);
@@ -320,7 +316,7 @@ function createTicketTableView(tickets, tickets_id)
                 width: 'auto',                
                 height: text_size,
                 color:text_color,
-                font:{fontSize:text_size, fontWeight:'normal'/*, fontFamily:'Arial'*/} 
+                font:{fontSize:text_size, fontWeight:'normal'} 
             });
             
             var priorityheader_lbl = Titanium.UI.createLabel({
@@ -330,7 +326,7 @@ function createTicketTableView(tickets, tickets_id)
                 width: 'auto',                
                 height: label_size,
                 color:label_color,
-                font:{fontSize:label_size, fontWeight:'normal'/*, fontFamily:'Arial'*/}            
+                font:{fontSize:label_size, fontWeight:'normal'}            
             });
             
             priority_view.add(priority_lbl);
