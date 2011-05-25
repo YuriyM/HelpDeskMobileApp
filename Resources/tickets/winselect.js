@@ -7,7 +7,6 @@
  */
 
 Ti.include('../includes/network_webservice_client.js');
-Ti.include('../controls/load_indicator_iphone.js');
 
 var win = Ti.UI.currentWindow;
 
@@ -51,7 +50,6 @@ function loadList() {
     
     function createTVList(data)
     {	
-    	loadIndicator.hide();
     	Ti.API.info(data);
     	var info = eval('(' + data + ')');    	
         var receivedData = null;
@@ -108,11 +106,10 @@ function loadList() {
     }
     
     tvList.hide();
-    loadIndicator.show();
     mbl_dataExchange("GET", requestPoint,
     	onload,
-    	function (e) { loadIndicator.loadingdatastrem(e.progress); },
-    	function (e) { loadIndicator.hide();
+    	function (e) {  },
+    	function (e) { 
     		alert(e);
     		var data = '';
     		switch (win.window_type)
