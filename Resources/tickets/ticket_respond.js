@@ -1,4 +1,4 @@
-Ti.include('../includes/webserviceclient.js');
+Ti.include('../includes/network_webservice_client.js');
 
 var win = Titanium.UI.currentWindow;
 var tid = win.tid;

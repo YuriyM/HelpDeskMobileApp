@@ -1,4 +1,4 @@
-Ti.include('../includes/webserviceclient.js');
+Ti.include('../includes/network_webservice_client.js');
 Ti.include('../controls/table_pulldown_iphone.js');
 var win = Titanium.UI.currentWindow;
 

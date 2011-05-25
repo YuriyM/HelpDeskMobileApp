@@ -1,4 +1,4 @@
-Ti.include('../includes/webserviceclient.js');
+Ti.include('../includes/network_webservice_client.js');
 Ti.include('../includes/ticket_tableview.js');
 Ti.include('../controls/load_indicator_iphone.js');
 
