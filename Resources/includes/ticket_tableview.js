@@ -10,7 +10,7 @@ function createTicketTableView(tickets, tickets_id)
             var tclass = tickets[i].class_name;
             var priority = tickets[i].priority_level;
             var project = tickets[i].project;
-            var status = tickets[i].status;
+            var status = tickets[i].status_name;
             var level = tickets[i].level;
             var ticket_time = 'Yesterday'; // TODO tickets[i].TicketTime
             
@@ -354,7 +354,7 @@ function createTicketTableView(tickets, tickets_id)
      return rowData;
 }
 
-function createHTMLTicketView(ticket)
+function createHTMLTicketView()
 {
 	return '<html><body><table cellpadding=4 cellspacing=0><tbody><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Ticket #</td><td style="border-bottom:solid 1px #555555;text-align:left"><b><a href="http://login.bigwebapps.com/?TicketId=4410191&amp;login=yuriy.mykytyuk@micajah.com&amp;DeptId=7&amp;DeptName=bigWebApps+Support" target="_blank">11620</a> </b></td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Subject</td><td style="border-bottom:solid 1px #555555;text-align:left">Mobile UI Adjustmetns </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Department</td><td style="border-bottom:solid 1px #555555;text-align:left">bigWebApps Support </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Account/Location</td><td style="border-bottom:solid 1px #555555;text-align:left">bigWebApps Support (Internal) / Atlanta </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Technician</td><td style="border-bottom:solid 1px #555555;text-align:left">Yuriy Mykytyuk </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">User</td><td style="border-bottom:solid 1px #555555;text-align:left">Jon Vickers<br><a href="mailto:jon.vickers@micajah.com">jon.vickers@micajah.com</a></td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Level</td><td style="border-bottom:solid 1px #555555;text-align:left">3 - Active Plate </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Priority</td><td style="border-bottom:solid 1px #555555;text-align:left">4 - Upgrade/New Feature </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Expect Response By</td><td style="border-bottom:solid 1px #555555;text-align:left">5/5/2011 17:34 </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Class</td><td style="border-bottom:solid 1px #555555;text-align:left">HelpDesk </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Project</td><td style="border-bottom:solid 1px #555555;text-align:left">HelpDesk </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Logged Time</td><td style="border-bottom:solid 1px #555555;text-align:left">0 hours </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Remaining Time</td><td style="border-bottom:solid 1px #555555;text-align:left">0 hours </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Total Time</td><td style="border-bottom:solid 1px #555555;text-align:left">No budget </td></tr></tbody></table>' +
 	  	   '<br><table border=0 cellpadding=3 cellspacing=0><tbody><tr bgcolor="#3d3d8d"><td colspan=2 align=center><font color="#ffffff" size=2><b>Initial Post</b></font></td></tr><tr bgcolor="#cccccc"><td>Vickers, Jon</td><td align=right>5/5/2011 15:34</td></tr><tr><td colspan=2>https://bigwebapps.basecamphq.com/projects /6951513/posts/45369530/comments<br><br>Hey Yuriy, here is official ticket to make worklist UI adjustments.  Pat and I are giving conflicting opinions.  Take these suggestions and do what you think is best solution.<br><br>We can refine the UI additional later as one main project to clean all screens once we get the data working properly.<br><br>Following files were  uploaded: Ticket list style adjust.png, Ticket list style adjust2.png.</td></tr></tbody></table></html></body>';
@@ -369,7 +369,7 @@ function createTicketView(ticket)
     var tclass = ticket.class_name;
     var priority = ticket.priority_level;
     var project = ticket.project;
-    var status = ticket.status;
+    var status = ticket.status_name;
     var level = ticket.ticket_level;
     
     var data = [];

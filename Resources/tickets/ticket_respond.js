@@ -38,16 +38,23 @@ var bSend = Titanium.UI.createButton({
 
 bSend.addEventListener('click', function(e)
 {	
-	var requestData = {	details: textRespond.value	};
-    Ti.App.fireEvent('show_global_indicator',{message: 'Send Response'});
-    mbl_dataExchange("POST", "Tickets.svc/" + tid +"/comments/",
+	var requestData = {	type: "Message", message: textRespond.value	};
+    Ti.App.fireEvent('show_global_indicator',{message: 'Sending...'});
+    mbl_dataExchange("POST", "Tickets.svc/" + tid +"/COMMENTS/",
     	function () {
     		Ti.App.fireEvent('hide_global_indicator');
-        	win.navGroup.close(win);
-			win._parent.fireEvent("event_ticket_respond", { id : tid });
+    		Ti.API.info('Respond HTTP Status = ' + this.status);
+    		Ti.API.info('Respond HTTP Response = ' + this.responseText);
+    		if (this.status === 200)
+    		{
+        		win.navGroup.close(win);
+				win._parent.fireEvent("event_ticket_respond", { id : tid });
+			}
+			else
+				alert('Respond failed. Error code: ' + this.status);
     	},
     	function (e) {  },
-    	function (e) { Ti.App.fireEvent('hide_global_indicator'); alert(e); },
+    	function (e) { Ti.App.fireEvent('hide_global_indicator'); alert('Respond Connect Error. Details: ' + JSON.stringify(e)); },
     	JSON.stringify(requestData));
 });
 

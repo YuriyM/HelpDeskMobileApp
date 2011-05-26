@@ -76,37 +76,41 @@ win.addEventListener('event_select_entity',function(e)
 			case 0:
 				var requestData = 
 				{
-					ticket_id: tid,
-					level_id: e.id
+					level: e.id
 				}
 			break;
 			case 1:
 				var requestData = 
 				{
-					ticket_id: tid,
-					tech_id: e.id
+					tech_userid: e.id
 				}
 			break;
 			case 2:
 				var requestData = 
 				{
-					ticket_id: tid,
 					class_id: e.id
 				}
 			break;
 		}
     var jsonRequestData = JSON.stringify(requestData)
    	Ti.App.fireEvent('show_global_indicator',{message: 'Transfer Ticket'});
-    mbl_dataExchange("POST", "Tickets.svc/" + tid + "/transfer",
+    mbl_dataExchange("POST", "Tickets.svc/" + tid + "/TRANSFER/",
     	function () {
-    		Ti.App.fireEvent('hide_global_indicator');
-        	loadTicket();
-        	Ti.App.fireEvent('show_complete_message', { labelText: 'Ticket Successfully Transffered' });
+        	Ti.App.fireEvent('hide_global_indicator');        	
+        	Ti.API.info('Transfer HTTP Status = ' + this.status);
+    		Ti.API.info('Transfer HTTP Response = ' + this.responseText);
+    		if (this.status === 200)
+    		{
+        		loadTicket();
+        		Ti.App.fireEvent('show_complete_message', { labelText: 'Ticket Successfully Transffered' });
+			}
+			else
+				alert('Transfer failed. Error code: ' + this.status);
     	},
     	function (e) {  },
     	function (e) { 
     		Ti.App.fireEvent('hide_global_indicator');
-    		alert(e);
+    		alert('Transfer Connect Error. Details: ' + JSON.stringify(e));
     		loadTicket(); },
     	jsonRequestData);
 });
@@ -130,15 +134,24 @@ dialogClose.addEventListener('click',function(e)
 {
 	if (e.index == 0)
 	{
+		var requestData = {	status: "2" };
 		Ti.App.fireEvent('show_global_indicator',{message: 'Close Ticket'});
-		mbl_dataExchange("DELETE", "Tickets.svc/" + tid + "/",
+		mbl_dataExchange("PUT", "Tickets.svc/" + tid + "/",
     	function () {
-    		Ti.App.fireEvent('hide_global_indicator');
-    		loadTicket();
-			Ti.App.fireEvent('show_complete_message', { labelText: 'Ticket Successfully Closed' });
+			Ti.App.fireEvent('hide_global_indicator');
+        	Ti.API.info('Close HTTP Status = ' + this.status);
+    		Ti.API.info('Close HTTP Response = ' + this.responseText);
+    		if (this.status === 200)
+    		{
+        		loadTicket();
+        		Ti.App.fireEvent('show_complete_message', { labelText: 'Ticket Successfully Closed' });
+			}
+			else
+				alert('Close failed. Error code: ' + this.status);
     	},
     	function (e) {  },
-    	function (e) { Ti.App.fireEvent('hide_global_indicator'); alert(e); });
+    	function (e) { Ti.App.fireEvent('hide_global_indicator'); alert('Close Connect Error. Details: ' + JSON.stringify(e)); },
+    	JSON.stringify(requestData));
 	}
 });
 
@@ -188,9 +201,10 @@ add.addEventListener('click', function()
 
 win.addEventListener('event_ticket_created',function(e)
 {	
-	tickets = [];
-	tid = e.id;
-	loadTicket();
+	/*tickets = [e.id];
+	tid = e.createdId;
+	loadTicket();*/
+	Ti.API.info(e.createdId);
 	Ti.App.fireEvent('show_complete_message', { labelText: 'Ticket Successfully Created' });
 });
 
@@ -272,22 +286,33 @@ function loadTicket()
 {
 	function fillTicketTableView(data)
 	{
-		var ticket = eval('(' + data + ')');
-        webblobView.html = createHTMLTicketView(ticket);
-        webblobView.repaint();
-        Ti.App.fireEvent('hide_global_indicator');
-        //webblobView.show();
+		//Ti.API.info(data);
+		var ticket = eval('({"htmlTicket": ' + data + '})');
+        webblobView.html = ticket.htmlTicket;
+        webblobView.repaint();        
 	}
 	
-	//webblobView.hide();
 	Ti.App.fireEvent('show_global_indicator',{message: 'Load Ticket'});
-    mbl_dataExchange("GET", "Tickets.svc/" + tid + "/",
-    	function () { fillTicketTableView(this.responseText); },
+    mbl_dataExchange("GET", "Tickets.svc/" + tid + "/HTML/",
+    	function () {
+    		Ti.App.fireEvent('hide_global_indicator');        	
+        	Ti.API.info('Ticket HTML HTTP Status = ' + this.status);
+    		Ti.API.info('Ticket HTML HTTP Response = ' + this.responseText);
+    		if (this.status === 200)
+    		{
+        		fillTicketTableView(this.responseText);
+			}
+			else
+				alert('Ticket HTML failed. Error code: ' + this.status);				 
+   		},
     	function (e) {  },
     	function (e) {
-    		var data = '{"AccountID":"2","AccountLocation":"District Office","AccountLocationID":"218220","AccountName":"Alachua County Schools (FL)","AccountNumber":"1","AssetID":null,"Class":"HelpDesk","ClassID":"29","ClosedTime":"\/Date(1013784420000+0200)\/","ClosedUserEmail":null,"ClosedUserFirstName":null,"ClosedUserID":null,"ClosedUserLastName":null,"ClosedUserName":"","ClosureNote":null,"ConfirmedDateTime":null,"ConfirmedNote":null,"ConfirmedUserEmail":null,"ConfirmedUserFirstName":null,"ConfirmedUserID":null,"ConfirmedUserLastName":null,"ConfirmedUserName":"","CreateTime":"\/Date(1013587080000+0200)\/","CreatedUserEmail":"helpdesk@sbac.edu","CreatedUserFirstName":"SBAC","CreatedUserID":"34","CreatedUserLastName":"HELPDESK","CreatedUserName":"SBAC HELPDESK","CreationCategory":"Inquiry | General | Other","CreationCategoryID":"3","CustomXML":null,"EmailCC":null,"EstimatedTime":null,"Folder":null,"FolderID":null,"FollowUpDateTime":null,"FollowUpNote":null,"ID":"408","IdMethod":null,"IsConfirmed":null,"IsCreatedViaEmailParser":false,"IsHandledByCallCenter":false,"IsPreventive":false,"IsResolved":null,"LaborCost":0.0000,"Location":null,"LocationID":null,"MiscCost":0.0000,"NextStep":null,"Note":null,"PartsCost":0.0000,"Priority":"         1 - Unassigned Priority","PriorityID":"1547","PriorityLevel":1,"Project":null,"ProjectID":null,"RemainingHours":null,"RequestCompletionDateTime":null,"RequestCompletionNote":null,"ResolutionCategoryID":null,"ResolutionCategoryName":null,"SLACompleteDateTime":null,"SLAResponseDateTime":null,"SLAStartDateTime":null,"ScheduledTicketID":null,"Status":"Closed","Subject":"Merging multiple tickets","SubmissionCategoryID":null,"SubmissionCategoryName":null,"TechnicianEmail":"patrick.clements@bigwebapps.com","TechnicianFirstName":"Patrick","TechnicianID":"38006","TechnicianLastName":"Clements","TechnicianName":"Patrick Clements","TicketLevel":"         1 - Client Fulfillment Rep","TicketLevelID":"1","TicketNumber":93,"TicketNumberPrefix":null,"TotalHours":null,"TravelCost":0.0000,"UserEmail":"helpdesk@sbac.edu","UserFirstName":"SBAC","UserID":"34","UserLastName":"HELPDESK","UserName":"SBAC HELPDESK","Workpad":null,"Comments":null,"TimeLogs":null}';
-			fillTicketTableView(data);
-    		alert(e);
+    		var data = '<html><body><table cellpadding=4 cellspacing=0><tbody><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Ticket #</td><td style="border-bottom:solid 1px #555555;text-align:left"><b><a href="http://login.bigwebapps.com/?TicketId=4410191&amp;login=yuriy.mykytyuk@micajah.com&amp;DeptId=7&amp;DeptName=bigWebApps+Support" target="_blank">11620</a> </b></td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Subject</td><td style="border-bottom:solid 1px #555555;text-align:left">Mobile UI Adjustmetns </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Department</td><td style="border-bottom:solid 1px #555555;text-align:left">bigWebApps Support </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Account/Location</td><td style="border-bottom:solid 1px #555555;text-align:left">bigWebApps Support (Internal) / Atlanta </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Technician</td><td style="border-bottom:solid 1px #555555;text-align:left">Yuriy Mykytyuk </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">User</td><td style="border-bottom:solid 1px #555555;text-align:left">Jon Vickers<br><a href="mailto:jon.vickers@micajah.com">jon.vickers@micajah.com</a></td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Level</td><td style="border-bottom:solid 1px #555555;text-align:left">3 - Active Plate </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Priority</td><td style="border-bottom:solid 1px #555555;text-align:left">4 - Upgrade/New Feature </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Expect Response By</td><td style="border-bottom:solid 1px #555555;text-align:left">5/5/2011 17:34 </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Class</td><td style="border-bottom:solid 1px #555555;text-align:left">HelpDesk </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Project</td><td style="border-bottom:solid 1px #555555;text-align:left">HelpDesk </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Logged Time</td><td style="border-bottom:solid 1px #555555;text-align:left">0 hours </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Remaining Time</td><td style="border-bottom:solid 1px #555555;text-align:left">0 hours </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Total Time</td><td style="border-bottom:solid 1px #555555;text-align:left">No budget </td></tr></tbody></table>' +
+				  	   '<br><table border=0 cellpadding=3 cellspacing=0><tbody><tr bgcolor="#3d3d8d"><td colspan=2 align=center><font color="#ffffff" size=2><b>Initial Post</b></font></td></tr><tr bgcolor="#cccccc"><td>Vickers, Jon</td><td align=right>5/5/2011 15:34</td></tr><tr><td colspan=2>https://bigwebapps.basecamphq.com/projects /6951513/posts/45369530/comments<br><br>Hey Yuriy, here is official ticket to make worklist UI adjustments.  Pat and I are giving conflicting opinions.  Take these suggestions and do what you think is best solution.<br><br>We can refine the UI additional later as one main project to clean all screens once we get the data working properly.<br><br>Following files were  uploaded: Ticket list style adjust.png, Ticket list style adjust2.png.</td></tr></tbody></table></html></body>';
+			webblobView.html = data;
+        	webblobView.repaint();
+        	Ti.App.fireEvent('hide_global_indicator');
+    		alert('Ticket HTML Connect Error. Details: ' + JSON.stringify(e));
     	});
 }
 

@@ -95,24 +95,30 @@ bNavAdd.addEventListener('click', function(e)
         	Ti.App.Properties.setString('mblUserEmail', email);
         	Ti.App.Properties.setString('mblUserPwd', pwd);
         	textPassword.value = '';
-        	
-        	var win = Ti.UI.createWindow( {
-	       		title : 'Dashboard',				
-		        url: 'home.js',
-		        _parent: Titanium.UI.currentWindow,
-		        navGroup : Titanium.UI.currentWindow.navGroup,
-		        rootWindow : Titanium.UI.currentWindow.rootWindow
-		    });		     
-		 	Titanium.UI.currentWindow.navGroup.open(win, {animated:true});
+        	Ti.API.info('Login HTTP Status = ' + this.status);
+    		Ti.API.info('Login HTTP Response = ' + this.responseText);
+    		if (this.status === 200)
+    		{
+        		var win = Ti.UI.createWindow( {
+		       		title : 'Dashboard',				
+			        url: 'home.js',
+			        _parent: Titanium.UI.currentWindow,
+			        navGroup : Titanium.UI.currentWindow.navGroup,
+			        rootWindow : Titanium.UI.currentWindow.rootWindow
+			    });		     
+			 	Titanium.UI.currentWindow.navGroup.open(win, {animated:true});
+			}
+			else
+				alert('Login failed. Error code: ' + this.status);
     	},
     	function (e) {  },
-    	function (e) { Ti.App.fireEvent('hide_global_indicator'); alert('Invalid Credentials'); },
+    	function (e) { Ti.App.fireEvent('hide_global_indicator'); alert('Login Connect Error. Details: ' + JSON.stringify(e)); },
     	null,
     	email,
     	pwd
     	);
 });
-win.setRightNavButton(bNavAdd);
+win.setRightNavButton(bNavAdd);//connected
 
 var navSettings = Ti.UI.createButton({title:'Settings'});
 navSettings.addEventListener('click', function(e)

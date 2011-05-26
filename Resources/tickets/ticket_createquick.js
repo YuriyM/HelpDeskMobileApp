@@ -160,23 +160,39 @@ bNavAdd.addEventListener('click', function(e)
 	
 	var requestData = 
 	{
-		user_id: tkt_uid,
+		user_userid: tkt_uid,
 		class_id: tkt_cid,
-		tech_id: tkt_tid,
+		tech_userid: tkt_tid,
 		subject: subjectText,
-		details: textDetails.value
+		note: textDetails.value
 	};
 	
     var jsonRequestData = JSON.stringify(requestData)
     Ti.App.fireEvent('show_global_indicator',{message: 'Create Ticket'});
     mbl_dataExchange("POST", "Tickets.svc",
     	function () {
+    		var responseStatus = this.status;
+    		var responseValue = this.responseText;
     		Ti.App.fireEvent('hide_global_indicator');
-        	win.navGroup.close(win);
-			win._parent.fireEvent("event_ticket_created", { id : 0 }); // TODO: add new ticket id
+    		Ti.API.info('Create HTTP Status = ' + responseStatus);
+    		Ti.API.info('Create HTTP Response = ' + responseValue);
+    		var intCreatedId = parseInt(responseValue);// return NaN
+    		var isIdValid = false;
+    		if (intCreatedId !== NaN) 
+    			if (intCreatedId.toString() === responseValue)
+    				if (intCreatedId > 0)
+    					isIdValid = true;
+    		Ti.API.info('intCreatedId = ' + intCreatedId);
+    		if (responseStatus === 200 && isIdValid)
+    		{
+        		win.navGroup.close(win);
+				win._parent.fireEvent("event_ticket_created", JSON.stringify({ createdId : intCreatedId }));
+			}
+			else
+				alert('Create failed. Error code: ' + responseStatus);
     	},
     	function (e) {  },
-    	function (e) { Ti.App.fireEvent('hide_global_indicator'); alert(e); },
+    	function (e) { Ti.App.fireEvent('hide_global_indicator'); alert('Create Ticket Connect Error. Details: ' + JSON.stringify(e)); },
     	jsonRequestData);
 });
 win.setRightNavButton(bNavAdd);

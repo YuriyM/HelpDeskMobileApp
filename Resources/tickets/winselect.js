@@ -71,7 +71,7 @@ function loadList() {
 		    	case 0: row.title = receivedData[i].first_name + ' ' + receivedData[i].last_name;
 		    	break;
 		    	case 1:
-		    		row.title = receivedData[i].name + ' ' + receivedData[i].hierarchy_level;
+		    		row.title = receivedData[i].name;
 		    		row.indentionLevel = receivedData[i].hierarchy_level;
 		    	break;
 		    	case 2: row.title = receivedData[i].first_name + ' ' + receivedData[i].last_name;
@@ -84,12 +84,9 @@ function loadList() {
 			row.className = "_item_";
 			data[i] = row;
 		}		
-        tvList.setData(data);
-        Ti.App.fireEvent('hide_global_indicator');
+        tvList.setData(data);        
         tvList.show();
-    }    
-	
-    function onload() { createTVList(this.responseText); };
+    }
     
     var requestPoint = '';
     var loadMessage = '';
@@ -116,11 +113,21 @@ function loadList() {
     Ti.App.fireEvent('show_global_indicator',{message: 'Load ' + loadMessage});
     tvList.hide();    
     mbl_dataExchange("GET", requestPoint,
-    	onload,
+    	function () {
+    		Ti.App.fireEvent('hide_global_indicator');        	
+        	Ti.API.info('Select HTTP Status = ' + this.status);
+    		Ti.API.info('Select HTTP Response = ' + this.responseText);
+    		if (this.status === 200)
+    		{
+        		createTVList(this.responseText);
+			}
+			else
+				alert('Select failed. Error code: ' + this.status);
+    	},
     	function (e) {  },
     	function (e) { 
     		Ti.App.fireEvent('hide_global_indicator');
-    		alert(e);
+    		alert('Select Connect Error. Details: ' + JSON.stringify(e));
     		var data = '';
     		switch (win.window_type)
 		    {
