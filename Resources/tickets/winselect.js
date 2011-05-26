@@ -7,7 +7,6 @@
  */
 
 Ti.include('../includes/network_webservice_client.js');
-
 var win = Ti.UI.currentWindow;
 
 var search = Titanium.UI.createSearchBar({
@@ -15,7 +14,7 @@ var search = Titanium.UI.createSearchBar({
 	hintText:'Search User'
 });
 
-var tvList = Titanium.UI.createTableView({  });
+var tvList = Titanium.UI.createTableView({ });
 
 if (win.window_type == 0)
 	tvList.search = search;
@@ -41,7 +40,7 @@ tvList.addEventListener('click', function(e)
 			select_type: win.window_type,
 			name: section.rows[index].title,
 			id : section.rows[index].key
-		}); // another way - use Ti.App.fireEvent - global event
+		});
 	}, 500);
 });
 win.add(tvList);
@@ -50,7 +49,6 @@ function loadList() {
     
     function createTVList(data)
     {	
-    	Ti.API.info(data);
     	var info = eval('(' + data + ')');    	
         var receivedData = null;
         switch (win.window_type)
@@ -85,31 +83,43 @@ function loadList() {
 			row.key = receivedData[i].key;
 			row.className = "_item_";
 			data[i] = row;
-		}
-        tvList.data = data;
+		}		
+        tvList.setData(data);
+        Ti.App.fireEvent('hide_global_indicator');
         tvList.show();
     }    
 	
     function onload() { createTVList(this.responseText); };
     
     var requestPoint = '';
+    var loadMessage = '';
     switch (win.window_type)
     {
-    	case 0: requestPoint = 'Users.svc';
+    	case 0:
+    		requestPoint = 'Users.svc';
+    		loadMessage = 'Users';
     	break;
-    	case 1: requestPoint = 'Classes.svc';
+    	case 1:
+    		requestPoint = 'Classes.svc';
+    		loadMessage = 'Classes';
     	break;
-    	case 2: requestPoint = 'Users.svc';
+    	case 2:
+    		requestPoint = 'Users.svc';
+    		loadMessage = 'Techs';
     	break;
-    	case 3: requestPoint = 'Levels.svc';
+    	case 3:
+    		requestPoint = 'Levels.svc';
+    		loadMessage = 'Levels';
     	break;
     }
     
-    tvList.hide();
+    Ti.App.fireEvent('show_global_indicator',{message: 'Load ' + loadMessage});
+    tvList.hide();    
     mbl_dataExchange("GET", requestPoint,
     	onload,
     	function (e) {  },
     	function (e) { 
+    		Ti.App.fireEvent('hide_global_indicator');
     		alert(e);
     		var data = '';
     		switch (win.window_type)

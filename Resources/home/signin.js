@@ -88,8 +88,7 @@ bNavAdd.addEventListener('click', function(e)
 		return;
 	}
 	
-	Ti.App.fireEvent('show_global_indicator',{'caution': 'Signing In'});
-    Ti.API.info('email= ' + email + '   pwd=' + pwd);
+	Ti.App.fireEvent('show_global_indicator',{message: 'Signing In'});
     mbl_dataExchange("GET", "Tickets.svc?pg=1&ps=2",
     	function () {
     		Ti.App.fireEvent('hide_global_indicator');

@@ -1,20 +1,14 @@
 Ti.include('../includes/network_webservice_client.js');
-
 var win = Titanium.UI.currentWindow;
+
+//
+// RESPOND WINDOW GLOBAL VARIABLES SECTION
+//
 var tid = win.tid;
 
-if (Ti.Platform.name == 'android') 
-{
-	win.backgroundColor = '#4e5c4d';
-}
-else
-{
-	//win.backgroundColor = '#aebcad';
-}
-
-win.backButtonTitle = 'Back';
-
-
+//
+// RESPOND MAIN WINDOW INITIALIZATION
+//
 var textRespond = Titanium.UI.createTextArea({
 	color:'#336699',
 	borderRadius: 5,
@@ -34,8 +28,7 @@ var bSend = Titanium.UI.createButton({
 	width: 280,
 	top:320,
 	style:Titanium.UI.iPhone.SystemButtonStyle.PLAIN, 
-	borderRadius:10, 
-	//font:{fontSize:16,fontWeight:'bold'},  // add background image
+	borderRadius:10,
 	backgroundGradient:
 	{type:'linear', colors:['#8097c8','#3665bf'], startPoint:{x:0,y:0}, endPoint:{x:0,y:40}, backFillStart:false},
 	borderWidth:1,
@@ -43,20 +36,18 @@ var bSend = Titanium.UI.createButton({
 	color: '#fff'
 });
 
-// create table view event listener
 bSend.addEventListener('click', function(e)
 {	
 	var requestData = {	details: textRespond.value	};
-    
-    Ti.API.info('Before ' + JSON.stringify(requestData));
+    Ti.App.fireEvent('show_global_indicator',{message: 'Send Response'});
     mbl_dataExchange("POST", "Tickets.svc/" + tid +"/comments/",
     	function () {
-        	Ti.API.info(this.responseText);
+    		Ti.App.fireEvent('hide_global_indicator');
         	win.navGroup.close(win);
 			win._parent.fireEvent("event_ticket_respond", { id : tid });
     	},
     	function (e) {  },
-    	function (e) { alert(e); },
+    	function (e) { Ti.App.fireEvent('hide_global_indicator'); alert(e); },
     	JSON.stringify(requestData));
 });
 

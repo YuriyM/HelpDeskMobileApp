@@ -1,22 +1,14 @@
 Ti.include('../includes/network_webservice_client.js');
-
 var win = Titanium.UI.currentWindow;
-tkt_uid = 0;
-tkt_cid = 0;
-tkt_tid = 0;
-tkt_sbj = false;
 
-if (Ti.Platform.name == 'android') 
-{
-	win.backgroundColor = '#4e5c4d';
-}
-else
-{
-	//win.backgroundColor = '#aebcad';
-}
+//
+// TICKET WINDOW GLOBAL VARIABLES SECTION
+//
+var tkt_uid = 0, tkt_cid = 0, tkt_tid = 0, tkt_sbj = false;
 
-win.backButtonTitle = 'Back';
-
+//
+// CREATE TICKET MAIN WINDOW INITIALIZATION
+//
 var data = [];
 
 // User row
@@ -49,7 +41,8 @@ data[2] = rowTech;
 var rowSubject = Ti.UI.createTableViewRow({		
 	entityId: 0,
 	height:55,	
-	header:'Subject*'	
+	header:'Subject*',
+	selectionStyle: Ti.UI.iPhone.TableViewCellSelectionStyle.NONE
 });
 
 var textSubject = Titanium.UI.createTextField({
@@ -58,19 +51,16 @@ var textSubject = Titanium.UI.createTextField({
 	top:10,
 	left:10,
 	width:250,
-	hintText:'Enter Ticket Subject'//,
-	//borderStyle:Titanium.UI.INPUT_BORDERSTYLE_NONE
+	hintText:'Enter Ticket Subject'
 });
-
 rowSubject.add(textSubject);
-rowSubject.selectionStyle = Ti.UI.iPhone.TableViewCellSelectionStyle.NONE;
-
 data[3] = rowSubject;
 
 var rowDetails = Ti.UI.createTableViewRow({		
 	entityId: 0,	
 	height:200,
-	header:'Details'	
+	header:'Details',
+	selectionStyle: Ti.UI.iPhone.TableViewCellSelectionStyle.NONE
 });
 
 var textDetails = Titanium.UI.createTextArea({
@@ -78,35 +68,22 @@ var textDetails = Titanium.UI.createTextArea({
 	height:150,
 	top:10,
 	left:10,
-	//width:250,
 	hintText:'Enter Ticket Details'
 });
-
 rowDetails.add(textDetails);
-rowDetails.selectionStyle = Ti.UI.iPhone.TableViewCellSelectionStyle.NONE;
-
 data[4] = rowDetails;
 
-/*// create table view
-var tableview = Titanium.UI.createTableView({
-	data:data,
-	style: Titanium.UI.iPhone.TableViewStyle.GROUPED
-});*/
-
-
-// create table view
 var tableViewOptions = {
-		data:data,
-		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
-		backgroundColor:'transparent',
-		rowBackgroundColor:'white'
-	};
-
-
-var tableview = Titanium.UI.createTableView(tableViewOptions);
+	data:data,
+	style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
+	backgroundColor:'transparent',
+	rowBackgroundColor:'white'
+};
+var tvCreateTicket = Titanium.UI.createTableView(tableViewOptions);
 
 var winSelect = [null, null, null];
 
+// controls click handler
 var hdMobile = {};
 
 hdMobile.createSelectWindow = function(e) {
@@ -116,13 +93,11 @@ hdMobile.createSelectWindow = function(e) {
 				_parent: Titanium.UI.currentWindow,
 			    navGroup : Titanium.UI.currentWindow.navGroup,
 			    rootWindow : Titanium.UI.currentWindow.rootWindow		
-			});
-    
+			});    
     return winUni;
 };
 
-// create table view event listener
-tableview.addEventListener('click', function(e)
+tvCreateTicket.addEventListener('click', function(e)
 {
 	if (e.rowData.winurl)
 	{
@@ -147,11 +122,14 @@ tableview.addEventListener('click', function(e)
 			break;
 		}
 		Titanium.UI.currentWindow.navGroup.open(winSelect[e.index],{animated:true});
-		//Titanium.UI.currentTab.open(win,{animated:true});
 	}
 });
-// add table view to the window
-win.add(tableview);
+
+win.add(tvCreateTicket);
+
+//
+// NAVBAR INITIALIZATION
+//
 var bNavAdd = Titanium.UI.createButton({ title: 'Create' });
 bNavAdd.addEventListener('click', function(e)
 {
@@ -173,7 +151,8 @@ bNavAdd.addEventListener('click', function(e)
 		return;
 	}
 	
-	if (textSubject.value == '')
+	var subjectText = textSubject.value;
+	if (subjectText.length === 0)
 	{
 		alert('Please, enter ticket subject');
 		return;
@@ -184,34 +163,27 @@ bNavAdd.addEventListener('click', function(e)
 		user_id: tkt_uid,
 		class_id: tkt_cid,
 		tech_id: tkt_tid,
-		subject: textSubject.value,
+		subject: subjectText,
 		details: textDetails.value
 	};
 	
     var jsonRequestData = JSON.stringify(requestData)
-    
-    Ti.API.info('Before ' + jsonRequestData);
+    Ti.App.fireEvent('show_global_indicator',{message: 'Create Ticket'});
     mbl_dataExchange("POST", "Tickets.svc",
     	function () {
-        	Ti.API.info(this.responseText);
+    		Ti.App.fireEvent('hide_global_indicator');
         	win.navGroup.close(win);
-			win._parent.fireEvent("event_ticket_created", { id : 0 });
+			win._parent.fireEvent("event_ticket_created", { id : 0 }); // TODO: add new ticket id
     	},
     	function (e) {  },
-    	function (e) { alert(e); },
+    	function (e) { Ti.App.fireEvent('hide_global_indicator'); alert(e); },
     	jsonRequestData);
 });
 win.setRightNavButton(bNavAdd);
 
-//win.rightNavButton.enabled = false;
-
-function changeRightNavBtnStatus()
-{
-	//win.rightNavButton.enabled = true;// 
-	//var b = (win.tkt_uid > 0 && win.tkt_cid > 0 && win.tkt_tid > 0 && win.tkt_sbj);
-	//alert(b);
-}
-
+//
+// SELECT SOME ENTITY HANDLER
+//
 win.addEventListener('event_select_entity',function(e)
 {
 	var rowUpdate = null;
@@ -245,13 +217,5 @@ win.addEventListener('event_select_entity',function(e)
 			tkt_tid = e.id;
 		break;
 	}
-	tableview.updateRow(e.select_type,rowUpdate,{animationStyle:Titanium.UI.iPhone.RowAnimationStyle.LEFT});
-    Titanium.API.info("foo event received = "+JSON.stringify(e));
-    changeRightNavBtnStatus();
+	tvCreateTicket.updateRow(e.select_type,rowUpdate,{animationStyle:Titanium.UI.iPhone.RowAnimationStyle.LEFT});
 });
-
-/*textSubject.addEventListener('blur', function(e)
-{
-	win.tkt_sbj = textSubject.hasText();
-	changeRightNavBtnStatus();
-});*/

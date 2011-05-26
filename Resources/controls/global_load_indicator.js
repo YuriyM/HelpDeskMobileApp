@@ -2,7 +2,7 @@
  *	Custom Global Load Indicator 
  * 	How-To:
  * 		Show
- *		Ti.App.fireEvent('show_global_indicator',{'caution': 'what load'});
+ *		Ti.App.fireEvent('show_global_indicator',{message: 'what load'});
  * 
  * 		Hide
  * 		Ti.App.fireEvent('hide_global_indicator');
@@ -41,12 +41,13 @@
 		width:30,
 	});
 	
+	var message = null;
 	if (Ti.Platform.osname !== 'android')
 	{
 		indWin.add(actInd);
 
 		// message
-		var message = Titanium.UI.createLabel({
+		message = Titanium.UI.createLabel({
 			text:'Loading',
 			color:'#fff',
 			width:'auto',
@@ -59,10 +60,15 @@
 	else
 		actInd.message = "Loading";
 	
-	function showIndicator()
+	function showIndicator(messageText)
 	{
 		if (Ti.Platform.osname !== 'android')
+		{
+			message.text = messageText;
 			indWin.open();
+		}
+		else
+			actInd.message = messageText;
 		actInd.show();
 	}
 
@@ -75,7 +81,7 @@
 	
 	Titanium.App.addEventListener('show_global_indicator', function(e)
 	{
-		showIndicator();
+		showIndicator(e.message);
 	});
 	Titanium.App.addEventListener('hide_global_indicator', function(e)
 	{

@@ -20,6 +20,7 @@ win.add(webblobView);
 //
 var flexSpace = Titanium.UI.createButton({ systemButton:Titanium.UI.iPhone.SystemButton.FLEXIBLE_SPACE });
 
+// refresh
 var refresh = Titanium.UI.createButton({ systemButton:Titanium.UI.iPhone.SystemButton.REFRESH });
 refresh.addEventListener('click', loadTicket);
 
@@ -35,13 +36,14 @@ var dialogTransfer = Titanium.UI.createOptionDialog(optionsTransferDialogOpts);
 var winSelect = [null, null, null];
 dialogTransfer.addEventListener('click',function(e)
 {
+	if (e.index !== 3)
+	{
 		if (winSelect[e.index] == null)
 		{
 			var win_type = 3 - e.index;
 			var winUni = Titanium.UI.createWindow({
 				url:'winselect.js',	
-				window_type: win_type,
-				title: 'Details',						
+				window_type: win_type,				
 				_parent: Titanium.UI.currentWindow,
 			    navGroup : Titanium.UI.currentWindow.navGroup,
 			    rootWindow : Titanium.UI.currentWindow.rootWindow		
@@ -63,13 +65,12 @@ dialogTransfer.addEventListener('click',function(e)
 				winSelect[e.index].title = 'Select Class';
 			break;
 		}
-		Titanium.UI.currentWindow.navGroup.open(winSelect[e.index],{animated:true});
+	Titanium.UI.currentWindow.navGroup.open(winSelect[e.index],{animated:true});
+	}
 });
 
 win.addEventListener('event_select_entity',function(e)
 {
-	Titanium.API.info("callback event received = "+JSON.stringify(e));
-	//e.id
 	switch (e.select_type)
 		{
 			case 0:
@@ -95,15 +96,18 @@ win.addEventListener('event_select_entity',function(e)
 			break;
 		}
     var jsonRequestData = JSON.stringify(requestData)
-    
-    Ti.API.info('Before ' + jsonRequestData);
+   	Ti.App.fireEvent('show_global_indicator',{message: 'Transfer Ticket'});
     mbl_dataExchange("POST", "Tickets.svc/" + tid + "/transfer",
     	function () {
+    		Ti.App.fireEvent('hide_global_indicator');
         	loadTicket();
-			//win._parent.fireEvent("event_ticket_created", { id : 0 });
+        	Ti.App.fireEvent('show_complete_message', { labelText: 'Ticket Successfully Transffered' });
     	},
     	function (e) {  },
-    	function (e) { alert(e); loadTicket(); },
+    	function (e) { 
+    		Ti.App.fireEvent('hide_global_indicator');
+    		alert(e);
+    		loadTicket(); },
     	jsonRequestData);
 });
 
@@ -126,14 +130,15 @@ dialogClose.addEventListener('click',function(e)
 {
 	if (e.index == 0)
 	{
+		Ti.App.fireEvent('show_global_indicator',{message: 'Close Ticket'});
 		mbl_dataExchange("DELETE", "Tickets.svc/" + tid + "/",
     	function () {
-        	Ti.API.info(this.responseText);
-        	win.navGroup.close(win);
-			win._parent.fireEvent("event_ticket_closed", { id : tid });
+    		Ti.App.fireEvent('hide_global_indicator');
+    		loadTicket();
+			Ti.App.fireEvent('show_complete_message', { labelText: 'Ticket Successfully Closed' });
     	},
     	function (e) {  },
-    	function (e) { alert(e); });
+    	function (e) { Ti.App.fireEvent('hide_global_indicator'); alert(e); });
 	}
 });
 
@@ -150,6 +155,7 @@ respond.addEventListener('click', function()
 		var win = Titanium.UI.createWindow({
 			url:"ticket_respond.js",
 			title:"Write Ticket Response",
+			backButtonTitle: "Back",
 			tid: tid,
 			_parent: Titanium.UI.currentWindow,
 		    navGroup : Titanium.UI.currentWindow.navGroup,
@@ -160,7 +166,8 @@ respond.addEventListener('click', function()
 
 win.addEventListener('event_ticket_respond',function(e)
 {
-	// refresh ticket info - after ticket respond
+	Ti.App.fireEvent('show_complete_message', { labelText: 'Response Sent' });
+	loadTicket();
 });
 
 // add section
@@ -170,7 +177,8 @@ add.addEventListener('click', function()
 {
 	var win = Titanium.UI.createWindow({
 			url:"ticket_createquick.js",
-			title:"Add Ticket",						
+			title:"Add Ticket",
+			backButtonTitle: "Back",
 			_parent: Titanium.UI.currentWindow,
 		    navGroup : Titanium.UI.currentWindow.navGroup,
 		    rootWindow : Titanium.UI.currentWindow.rootWindow		
@@ -179,8 +187,11 @@ add.addEventListener('click', function()
 });
 
 win.addEventListener('event_ticket_created',function(e)
-{
-	// refresh ticket info - show created ticket
+{	
+	tickets = [];
+	tid = e.id;
+	loadTicket();
+	Ti.App.fireEvent('show_complete_message', { labelText: 'Ticket Successfully Created' });
 });
 
 win.toolbar = [refresh,flexSpace,transfer,flexSpace,close,flexSpace,respond,flexSpace,add];
@@ -259,18 +270,23 @@ nav_bar.addEventListener('click', function(e)
 //
 function loadTicket()
 {
-	function renderData(data)
+	function fillTicketTableView(data)
 	{
 		var ticket = eval('(' + data + ')');
         webblobView.html = createHTMLTicketView(ticket);
+        webblobView.repaint();
+        Ti.App.fireEvent('hide_global_indicator');
+        //webblobView.show();
 	}
 	
+	//webblobView.hide();
+	Ti.App.fireEvent('show_global_indicator',{message: 'Load Ticket'});
     mbl_dataExchange("GET", "Tickets.svc/" + tid + "/",
-    	function onload() { renderData(this.responseText); },
+    	function () { fillTicketTableView(this.responseText); },
     	function (e) {  },
-    	function (e) { 
+    	function (e) {
     		var data = '{"AccountID":"2","AccountLocation":"District Office","AccountLocationID":"218220","AccountName":"Alachua County Schools (FL)","AccountNumber":"1","AssetID":null,"Class":"HelpDesk","ClassID":"29","ClosedTime":"\/Date(1013784420000+0200)\/","ClosedUserEmail":null,"ClosedUserFirstName":null,"ClosedUserID":null,"ClosedUserLastName":null,"ClosedUserName":"","ClosureNote":null,"ConfirmedDateTime":null,"ConfirmedNote":null,"ConfirmedUserEmail":null,"ConfirmedUserFirstName":null,"ConfirmedUserID":null,"ConfirmedUserLastName":null,"ConfirmedUserName":"","CreateTime":"\/Date(1013587080000+0200)\/","CreatedUserEmail":"helpdesk@sbac.edu","CreatedUserFirstName":"SBAC","CreatedUserID":"34","CreatedUserLastName":"HELPDESK","CreatedUserName":"SBAC HELPDESK","CreationCategory":"Inquiry | General | Other","CreationCategoryID":"3","CustomXML":null,"EmailCC":null,"EstimatedTime":null,"Folder":null,"FolderID":null,"FollowUpDateTime":null,"FollowUpNote":null,"ID":"408","IdMethod":null,"IsConfirmed":null,"IsCreatedViaEmailParser":false,"IsHandledByCallCenter":false,"IsPreventive":false,"IsResolved":null,"LaborCost":0.0000,"Location":null,"LocationID":null,"MiscCost":0.0000,"NextStep":null,"Note":null,"PartsCost":0.0000,"Priority":"         1 - Unassigned Priority","PriorityID":"1547","PriorityLevel":1,"Project":null,"ProjectID":null,"RemainingHours":null,"RequestCompletionDateTime":null,"RequestCompletionNote":null,"ResolutionCategoryID":null,"ResolutionCategoryName":null,"SLACompleteDateTime":null,"SLAResponseDateTime":null,"SLAStartDateTime":null,"ScheduledTicketID":null,"Status":"Closed","Subject":"Merging multiple tickets","SubmissionCategoryID":null,"SubmissionCategoryName":null,"TechnicianEmail":"patrick.clements@bigwebapps.com","TechnicianFirstName":"Patrick","TechnicianID":"38006","TechnicianLastName":"Clements","TechnicianName":"Patrick Clements","TicketLevel":"         1 - Client Fulfillment Rep","TicketLevelID":"1","TicketNumber":93,"TicketNumberPrefix":null,"TotalHours":null,"TravelCost":0.0000,"UserEmail":"helpdesk@sbac.edu","UserFirstName":"SBAC","UserID":"34","UserLastName":"HELPDESK","UserName":"SBAC HELPDESK","Workpad":null,"Comments":null,"TimeLogs":null}';
-			renderData(data);
+			fillTicketTableView(data);
     		alert(e);
     	});
 }
