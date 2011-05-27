@@ -12,7 +12,7 @@ function createTicketTableView(tickets, tickets_id)
             var project = tickets[i].project;
             var status = tickets[i].status_name;
             var level = tickets[i].level;
-            var ticket_time = 'Yesterday'; // TODO tickets[i].TicketTime
+            var ticket_time = tickets[i].created_time_str;
             
             var label_color = '#888888';
             var text_color = '#222222';
@@ -371,6 +371,7 @@ function createTicketView(ticket)
     var project = ticket.project;
     var status = ticket.status_name;
     var level = ticket.ticket_level;
+    var ticket_time = ticket.created_time_str;
     
     var data = [];
     

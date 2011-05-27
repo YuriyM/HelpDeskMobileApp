@@ -172,13 +172,15 @@ bNavAdd.addEventListener('click', function(e)
     mbl_dataExchange("POST", "Tickets.svc",
     	function () {
     		var responseStatus = this.status;
-    		var responseValue = this.responseText;
+    		var rawResponse = this.responseText;
+    		var responseValue = rawResponse.substring(1, rawResponse.length - 1);
     		Ti.App.fireEvent('hide_global_indicator');
     		Ti.API.info('Create HTTP Status = ' + responseStatus);
-    		Ti.API.info('Create HTTP Response = ' + responseValue);
-    		var intCreatedId = parseInt(responseValue);// return NaN
+    		Ti.API.info('Create HTTP Raw Response = ' + rawResponse);
+    		Ti.API.info('Create HTTP Trim Response = ' + responseValue);
+    		var intCreatedId = parseInt(responseValue);
     		var isIdValid = false;
-    		if (intCreatedId !== NaN) 
+    		if (!isNaN(intCreatedId)) 
     			if (intCreatedId.toString() === responseValue)
     				if (intCreatedId > 0)
     					isIdValid = true;
@@ -186,7 +188,7 @@ bNavAdd.addEventListener('click', function(e)
     		if (responseStatus === 200 && isIdValid)
     		{
         		win.navGroup.close(win);
-				win._parent.fireEvent("event_ticket_created", JSON.stringify({ createdId : intCreatedId }));
+				win._parent.fireEvent("event_ticket_created", { createdId : intCreatedId });
 			}
 			else
 				alert('Create failed. Error code: ' + responseStatus);

@@ -200,12 +200,14 @@ add.addEventListener('click', function()
 });
 
 win.addEventListener('event_ticket_created',function(e)
-{	
-	/*tickets = [e.id];
-	tid = e.createdId;
-	loadTicket();*/
-	Ti.API.info(e.createdId);
+{
+	Ti.API.info('View: TktCreated Event Handler. Id = ' + e.createdId);
 	Ti.App.fireEvent('show_complete_message', { labelText: 'Ticket Successfully Created' });
+	tid = e.createdId;
+	tickets = [e.createdId];	
+	Ti.API.info('View: TktCreated Event Handler. tickets = ' + tickets);
+	updateNavBar();
+	setTimeout( function (){ loadTicket(); }, 4000 );	
 });
 
 win.toolbar = [refresh,flexSpace,transfer,flexSpace,close,flexSpace,respond,flexSpace,add];
@@ -286,12 +288,12 @@ function loadTicket()
 {
 	function fillTicketTableView(data)
 	{
-		//Ti.API.info(data);
-		var ticket = eval('({"htmlTicket": ' + data + '})');
+		var ticket = eval('({"htmlTicket": ' + data + '})');		
         webblobView.html = ticket.htmlTicket;
-        webblobView.repaint();        
+        //webblobView.repaint();        
 	}
-	
+	//webblobView.html = '';
+	//webblobView.repaint();
 	Ti.App.fireEvent('show_global_indicator',{message: 'Load Ticket'});
     mbl_dataExchange("GET", "Tickets.svc/" + tid + "/HTML/",
     	function () {
