@@ -38,7 +38,7 @@ dialogTransfer.addEventListener('click',function(e)
 {
 	if (e.index !== 3)
 	{
-		if (winSelect[e.index] == null)
+		if (winSelect[e.index] === null)
 		{
 			var win_type = 3 - e.index;
 			var winUni = Titanium.UI.createWindow({
@@ -65,12 +65,15 @@ dialogTransfer.addEventListener('click',function(e)
 				winSelect[e.index].title = 'Select Class';
 			break;
 		}
-	Titanium.UI.currentWindow.navGroup.open(winSelect[e.index],{animated:true});
+		Titanium.UI.currentWindow.navGroup.open(winSelect[e.index],{animated:true});
 	}
 });
 
 win.addEventListener('event_select_entity',function(e)
 {
+	Ti.App.fireEvent('show_complete_message', { labelText: 'Transfer Disabled' });
+	return;
+	
 	switch (e.select_type)
 		{
 			case 0:
@@ -101,8 +104,9 @@ win.addEventListener('event_select_entity',function(e)
     		Ti.API.info('Transfer HTTP Response = ' + this.responseText);
     		if (this.status === 200)
     		{
-        		loadTicket();
+        		//loadTicket();
         		Ti.App.fireEvent('show_complete_message', { labelText: 'Ticket Successfully Transffered' });
+        		setTimeout( function (){ loadTicket(); }, 4000 );
 			}
 			else
 				alert('Transfer failed. Error code: ' + this.status);
@@ -143,8 +147,9 @@ dialogClose.addEventListener('click',function(e)
     		Ti.API.info('Close HTTP Response = ' + this.responseText);
     		if (this.status === 200)
     		{
-        		loadTicket();
-        		Ti.App.fireEvent('show_complete_message', { labelText: 'Ticket Successfully Closed' });
+        		//loadTicket();
+        		Ti.App.fireEvent('show_complete_message', { labelText: 'Ticket Successfully Closed' });        		
+        		setTimeout( function (){ loadTicket(); }, 4000 );
 			}
 			else
 				alert('Close failed. Error code: ' + this.status);
@@ -180,7 +185,7 @@ respond.addEventListener('click', function()
 win.addEventListener('event_ticket_respond',function(e)
 {
 	Ti.App.fireEvent('show_complete_message', { labelText: 'Response Sent' });
-	loadTicket();
+	setTimeout( function (){ loadTicket(); }, 4000 );
 });
 
 // add section
@@ -207,7 +212,7 @@ win.addEventListener('event_ticket_created',function(e)
 	tickets = [e.createdId];	
 	Ti.API.info('View: TktCreated Event Handler. tickets = ' + tickets);
 	updateNavBar();
-	setTimeout( function (){ loadTicket(); }, 4000 );	
+	setTimeout( function (){ loadTicket(); }, 4000 );
 });
 
 win.toolbar = [refresh,flexSpace,transfer,flexSpace,close,flexSpace,respond,flexSpace,add];
