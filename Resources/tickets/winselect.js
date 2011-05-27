@@ -59,28 +59,36 @@ function loadList() {
 	    	break;
 	    	case 2: receivedData = info.Users;
 	    	break;
-	    	case 3: receivedData = info.Levels;
+	    	case 3: receivedData = info.TicketLevels;
 	    	break;
 	    }
         var data = [];
 		for (var i=0; i < receivedData.length; i++)
 		{
 			var row = Ti.UI.createTableViewRow();
+			var key = null;
 			switch (win.window_type)
 		    {
-		    	case 0: row.title = receivedData[i].first_name + ' ' + receivedData[i].last_name;
+		    	case 0:
+		    		row.title = receivedData[i].first_name + ' ' + receivedData[i].last_name;
+		    		key = receivedData[i].key;
 		    	break;
 		    	case 1:
 		    		row.title = receivedData[i].name;
 		    		row.indentionLevel = receivedData[i].hierarchy_level;
+		    		key = receivedData[i].key;
 		    	break;
-		    	case 2: row.title = receivedData[i].first_name + ' ' + receivedData[i].last_name;
+		    	case 2:
+		    		row.title = receivedData[i].first_name + ' ' + receivedData[i].last_name;
+		    		key = receivedData[i].key;
 		    	break;
-		    	case 3: row.title = receivedData[i].name;
+		    	case 3:
+		    		row.title = receivedData[i].name;
+		    		key = receivedData[i].level;
 		    	break;
 		    }			
-			row.hasCheck = (win.select_id == receivedData[i].key);
-			row.key = receivedData[i].key;
+			row.hasCheck = (win.select_id == key);
+			row.key = key;
 			row.className = "_item_";
 			data[i] = row;
 		}		
@@ -105,7 +113,7 @@ function loadList() {
     		loadMessage = 'Techs';
     	break;
     	case 3:
-    		requestPoint = 'Levels.svc';
+    		requestPoint = 'TicketLevels.svc';
     		loadMessage = 'Levels';
     	break;
     }

@@ -26,9 +26,9 @@ function mbl_dataExchange(requestType, requestURL, onload, ondatastream, onerror
     
     if (onerror != null)
     	loader.onerror = onerror;
-    	
-    loader.open(requestType, APIOrgInstanceURL + requestURL, true);
+    
     loader.validatesSecureCertificate = APICertCheck;
+    loader.open(requestType, APIOrgInstanceURL + requestURL, true);    
     
     if (email == null)
     	email = Ti.App.Properties.getString('mblUserEmail', serviceLogin);
