@@ -48,7 +48,7 @@ bSend.addEventListener('click', function(e)
     		if (this.status === 200)
     		{
         		win.navGroup.close(win);
-				win._parent.fireEvent("event_ticket_respond", { id : tid });
+        		setTimeout( function (){ win._parent.fireEvent("event_ticket_respond", { id : tid }); }, 800 );
 			}
 			else
 				alert('Respond failed. Error code: ' + this.status);

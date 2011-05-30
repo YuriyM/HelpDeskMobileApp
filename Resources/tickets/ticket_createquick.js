@@ -167,7 +167,9 @@ bNavAdd.addEventListener('click', function(e)
 		note: textDetails.value
 	};
 	
-    var jsonRequestData = JSON.stringify(requestData)
+	var jsonRequestData = JSON.stringify(requestData);
+	Ti.API.info('Create jsonRequestData = ' + jsonRequestData);
+    
     Ti.App.fireEvent('show_global_indicator',{message: 'Create Ticket'});
     mbl_dataExchange("POST", "Tickets.svc",
     	function () {
@@ -188,7 +190,7 @@ bNavAdd.addEventListener('click', function(e)
     		if (responseStatus === 200 && isIdValid)
     		{
         		win.navGroup.close(win);
-				win._parent.fireEvent("event_ticket_created", { createdId : intCreatedId });
+        		setTimeout( function (){ win._parent.fireEvent("event_ticket_created", { createdId : intCreatedId }); }, 800 );
 			}
 			else
 				alert('Create failed. Error code: ' + responseStatus);

@@ -8,6 +8,7 @@ var win = Titanium.UI.currentWindow;
 var tid = win.tid;
 var tickets = win.tickets;
 var tkt_lid = 0, tkt_techid = 0, tkt_cid = 0;
+var tkt_updated = false;
 
 //
 // TICKETS MAIN WINDOW INITIALIZATION
@@ -71,31 +72,29 @@ dialogTransfer.addEventListener('click',function(e)
 
 win.addEventListener('event_select_entity',function(e)
 {
-	Ti.App.fireEvent('show_complete_message', { labelText: 'Transfer Disabled' });
-	return;
-	
 	switch (e.select_type)
 		{
-			case 0:
+			case 3:
 				var requestData = 
 				{
 					level: e.id
 				}
 			break;
-			case 1:
+			case 2:
 				var requestData = 
 				{
 					tech_userid: e.id
 				}
 			break;
-			case 2:
+			case 1:
 				var requestData = 
 				{
 					class_id: e.id
 				}
 			break;
 		}
-    var jsonRequestData = JSON.stringify(requestData)
+    var jsonRequestData = JSON.stringify(requestData);
+    Ti.API.info('requestData = ' + jsonRequestData);
    	Ti.App.fireEvent('show_global_indicator',{message: 'Transfer Ticket'});
     mbl_dataExchange("POST", "Tickets.svc/" + tid + "/TRANSFER/",
     	function () {
@@ -104,9 +103,9 @@ win.addEventListener('event_select_entity',function(e)
     		Ti.API.info('Transfer HTTP Response = ' + this.responseText);
     		if (this.status === 200)
     		{
-        		//loadTicket();
-        		Ti.App.fireEvent('show_complete_message', { labelText: 'Ticket Successfully Transffered' });
-        		setTimeout( function (){ loadTicket(); }, 4000 );
+    			tkt_updated = true;
+    			win.showCompleteMessage = 'Ticket Successfully Transffered';
+        		loadTicket();
 			}
 			else
 				alert('Transfer failed. Error code: ' + this.status);
@@ -147,9 +146,9 @@ dialogClose.addEventListener('click',function(e)
     		Ti.API.info('Close HTTP Response = ' + this.responseText);
     		if (this.status === 200)
     		{
-        		//loadTicket();
-        		Ti.App.fireEvent('show_complete_message', { labelText: 'Ticket Successfully Closed' });        		
-        		setTimeout( function (){ loadTicket(); }, 4000 );
+    			tkt_updated = true;
+    			win.showCompleteMessage = 'Ticket Successfully Closed';
+        		loadTicket();
 			}
 			else
 				alert('Close failed. Error code: ' + this.status);
@@ -184,8 +183,8 @@ respond.addEventListener('click', function()
 
 win.addEventListener('event_ticket_respond',function(e)
 {
-	Ti.App.fireEvent('show_complete_message', { labelText: 'Response Sent' });
-	setTimeout( function (){ loadTicket(); }, 4000 );
+	win.showCompleteMessage = 'Response Sent';
+	loadTicket();
 });
 
 // add section
@@ -206,13 +205,13 @@ add.addEventListener('click', function()
 
 win.addEventListener('event_ticket_created',function(e)
 {
+	win.showCompleteMessage = 'Ticket Successfully Created';
 	Ti.API.info('View: TktCreated Event Handler. Id = ' + e.createdId);
-	Ti.App.fireEvent('show_complete_message', { labelText: 'Ticket Successfully Created' });
 	tid = e.createdId;
 	tickets = [e.createdId];	
 	Ti.API.info('View: TktCreated Event Handler. tickets = ' + tickets);
 	updateNavBar();
-	setTimeout( function (){ loadTicket(); }, 4000 );
+	loadTicket();
 });
 
 win.toolbar = [refresh,flexSpace,transfer,flexSpace,close,flexSpace,respond,flexSpace,add];
@@ -286,6 +285,12 @@ nav_bar.addEventListener('click', function(e)
 	updateNavBar();
 });
 
+// back event handler to refresh main ticket list
+win.addEventListener('close', function(e)
+{
+	if (tkt_updated)
+		win._parent.fireEvent("event_refresh_ticket_list");
+});
 //
 // DEFINE MAIN FUNCTION
 //
@@ -295,7 +300,6 @@ function loadTicket()
 	{
 		var ticket = eval('({"htmlTicket": ' + data + '})');		
         webblobView.html = ticket.htmlTicket;
-        //webblobView.repaint();        
 	}
 	//webblobView.html = '';
 	//webblobView.repaint();
@@ -308,13 +312,16 @@ function loadTicket()
     		if (this.status === 200)
     		{
         		fillTicketTableView(this.responseText);
+        		if ((win.showCompleteMessage !== null) && (typeof win.showCompleteMessage !== "undefined"))
+        			if (win.showCompleteMessage.length > 0)        			
+        				Ti.App.fireEvent('show_complete_message', { labelText: win.showCompleteMessage });
 			}
 			else
 				alert('Ticket HTML failed. Error code: ' + this.status);				 
    		},
     	function (e) {  },
     	function (e) {
-    		var data = '<html><body><table cellpadding=4 cellspacing=0><tbody><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Ticket #</td><td style="border-bottom:solid 1px #555555;text-align:left"><b><a href="http://login.bigwebapps.com/?TicketId=4410191&amp;login=yuriy.mykytyuk@micajah.com&amp;DeptId=7&amp;DeptName=bigWebApps+Support" target="_blank">11620</a> </b></td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Subject</td><td style="border-bottom:solid 1px #555555;text-align:left">Mobile UI Adjustmetns </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Department</td><td style="border-bottom:solid 1px #555555;text-align:left">bigWebApps Support </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Account/Location</td><td style="border-bottom:solid 1px #555555;text-align:left">bigWebApps Support (Internal) / Atlanta </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Technician</td><td style="border-bottom:solid 1px #555555;text-align:left">Yuriy Mykytyuk </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">User</td><td style="border-bottom:solid 1px #555555;text-align:left">Jon Vickers<br><a href="mailto:jon.vickers@micajah.com">jon.vickers@micajah.com</a></td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Level</td><td style="border-bottom:solid 1px #555555;text-align:left">3 - Active Plate </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Priority</td><td style="border-bottom:solid 1px #555555;text-align:left">4 - Upgrade/New Feature </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Expect Response By</td><td style="border-bottom:solid 1px #555555;text-align:left">5/5/2011 17:34 </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Class</td><td style="border-bottom:solid 1px #555555;text-align:left">HelpDesk </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Project</td><td style="border-bottom:solid 1px #555555;text-align:left">HelpDesk </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Logged Time</td><td style="border-bottom:solid 1px #555555;text-align:left">0 hours </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Remaining Time</td><td style="border-bottom:solid 1px #555555;text-align:left">0 hours </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Total Time</td><td style="border-bottom:solid 1px #555555;text-align:left">No budget </td></tr></tbody></table>' +
+    		var data = '<html><body>This test ticket details for exceptions.<table cellpadding=4 cellspacing=0><tbody><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Ticket #</td><td style="border-bottom:solid 1px #555555;text-align:left"><b><a href="http://login.bigwebapps.com/?TicketId=4410191&amp;login=yuriy.mykytyuk@micajah.com&amp;DeptId=7&amp;DeptName=bigWebApps+Support" target="_blank">11620</a> </b></td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Subject</td><td style="border-bottom:solid 1px #555555;text-align:left">Mobile UI Adjustmetns </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Department</td><td style="border-bottom:solid 1px #555555;text-align:left">bigWebApps Support </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Account/Location</td><td style="border-bottom:solid 1px #555555;text-align:left">bigWebApps Support (Internal) / Atlanta </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Technician</td><td style="border-bottom:solid 1px #555555;text-align:left">Yuriy Mykytyuk </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">User</td><td style="border-bottom:solid 1px #555555;text-align:left">Jon Vickers<br><a href="mailto:jon.vickers@micajah.com">jon.vickers@micajah.com</a></td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Level</td><td style="border-bottom:solid 1px #555555;text-align:left">3 - Active Plate </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Priority</td><td style="border-bottom:solid 1px #555555;text-align:left">4 - Upgrade/New Feature </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Expect Response By</td><td style="border-bottom:solid 1px #555555;text-align:left">5/5/2011 17:34 </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Class</td><td style="border-bottom:solid 1px #555555;text-align:left">HelpDesk </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Project</td><td style="border-bottom:solid 1px #555555;text-align:left">HelpDesk </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Logged Time</td><td style="border-bottom:solid 1px #555555;text-align:left">0 hours </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Remaining Time</td><td style="border-bottom:solid 1px #555555;text-align:left">0 hours </td></tr><tr><td style="background-color:#aaaaaa;text-align:right;font-size:10pt;color:White;border-bottom:solid 1px #555555">Total Time</td><td style="border-bottom:solid 1px #555555;text-align:left">No budget </td></tr></tbody></table>' +
 				  	   '<br><table border=0 cellpadding=3 cellspacing=0><tbody><tr bgcolor="#3d3d8d"><td colspan=2 align=center><font color="#ffffff" size=2><b>Initial Post</b></font></td></tr><tr bgcolor="#cccccc"><td>Vickers, Jon</td><td align=right>5/5/2011 15:34</td></tr><tr><td colspan=2>https://bigwebapps.basecamphq.com/projects /6951513/posts/45369530/comments<br><br>Hey Yuriy, here is official ticket to make worklist UI adjustments.  Pat and I are giving conflicting opinions.  Take these suggestions and do what you think is best solution.<br><br>We can refine the UI additional later as one main project to clean all screens once we get the data working properly.<br><br>Following files were  uploaded: Ticket list style adjust.png, Ticket list style adjust2.png.</td></tr></tbody></table></html></body>';
 			webblobView.html = data;
         	webblobView.repaint();

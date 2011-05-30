@@ -26,22 +26,21 @@ tvList.addEventListener('click', function(e)
 	var index = e.index;
 	var section = e.section;
 		
-	setTimeout(function()
-	{	
-		for (var i=0;i<section.rows.length;i++)
-			section.rows[i].hasCheck = false;
-		section.rows[index].hasCheck = true;
-	}, 250);
+	for (var i=0;i<section.rows.length;i++)
+		section.rows[i].hasCheck = false;
+	section.rows[index].hasCheck = true;
+	
+	setTimeout(function() {	win.navGroup.close(win); }, 500);
 	
 	setTimeout(function()
 	{
-		win.navGroup.close(win);
-		win._parent.fireEvent("event_select_entity", {
+		win._parent.fireEvent("event_select_entity",
+		{
 			select_type: win.window_type,
 			name: section.rows[index].title,
 			id : section.rows[index].key
 		});
-	}, 500);
+	}, 1300);
 });
 win.add(tvList);
 		
