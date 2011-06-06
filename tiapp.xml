@@ -12,7 +12,7 @@
 <url>http://www.bigwebapps.com</url>
 <description>No description provided</description>
 <copyright>2011 by bigWebApps Inc.</copyright>
-<icon>default_app_logo.png</icon>
+<icon>helpdesk_app_logo.png</icon>
     <persistent-wifi>false</persistent-wifi>
     <prerendered-icon>false</prerendered-icon>
     <statusbar-style>default</statusbar-style>
